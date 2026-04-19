@@ -1,3 +1,19 @@
+// https://www.iskconforyouth.org/learn/home/Lead-Like-Arjuna/section/633153/lesson/4084834?
+
+// Main Focus:
+// Youth leaders to preach further
+// Course should be simailar like coursera. After one section completion there should be a quiz then next session will oprn.
+// Vistor-Seekers- Triee-Contributor-Leader
+// These are courses section
+// Prize and rewards
+// Trust worthy UI and content
+// Yoth journey
+// Make homepage more attractive
+// Notification (WhatsApp integration)
+// Mission and Vision(By )
+// Blog Section
+
+
 import { useState } from "react";
 import Masonry from "react-masonry-css";
 import Prabhupada from "../assets/January_20.jpg";
