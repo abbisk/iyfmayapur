@@ -38,7 +38,7 @@ export default function Navbar() {
       : 'text-gray-900';
 
   const navStyle =
-    scrollProgress < 0.1
+    scrollProgress < 0.01
       ? 'bg-transparent'
       : 'bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.2)]';
 

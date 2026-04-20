@@ -6,6 +6,7 @@ import { Home, Sp, Events, Seva, Store, Courses, Donation } from './pages/index.
 import ViewCourse from './pages/ViewCourse.jsx'
 import PageNotFound from './pages/PageNotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Footer from './components/Footer.jsx'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>
+      <Footer />
     </>
   );
 }
