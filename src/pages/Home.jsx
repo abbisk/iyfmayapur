@@ -17,6 +17,7 @@
 import { useState } from "react";
 import Masonry from "react-masonry-css";
 import Prabhupada from "../assets/January_20.jpg";
+import 'flowbite';
 // Import images from /src/assets/life
 const lifeImages = [
   "img0.jpg",
@@ -32,6 +33,24 @@ const lifeImages = [
   "img9.jpg",
   "img10.jpg",
 ].map((img) => `/life/${img}`);
+const crousalImages = [
+  "/home/youth1.jpeg",
+  "/home/youth2.jpeg",
+  "/home/youth3.jpeg",
+  "/home/youth4.jpeg",
+  "/home/youth5.jpeg",
+  "/home/youth6.jpeg",
+  "/home/youth8.jpeg",
+  "/home/youth9.jpeg",
+  "/home/youth10.jpeg",
+  "/home/youth11.jpeg",
+  "/home/youth12.jpeg",
+  "/home/youth13.jpeg",
+  "/home/youth14.jpeg",
+  "/home/youth15.jpeg",
+  "/home/youth16.jpeg",
+  "/home/youth17.jpeg",
+];
 
 export default function Home() {
 
@@ -42,23 +61,49 @@ export default function Home() {
   }
   return (
     <div>
-      {/* Hero Section */}
-      <div className="relative overflow-hidden group min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center">
-        <img
-          src="/youth.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[15000ms] ease-in-out group-hover:scale-110 z-0"
-        />
-        <div className="absolute inset-0 flex flex-col justify-center items-center bg-[radial-gradient(circle,_transparent_40%,_rgba(0,0,0,0.7)_100%)] z-10" />
-        <div className="absolute inset-0 flex items-center justify-center z-20">
-          <h1
-            className="uppercase tracking-wider font-semibold text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-8xl text-white text-center px-2 md:px-4 font-black tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] animate-pulse-slow"
-            style={fontstyle}
-          >
-            DISCOVER. CONNECT. TRANSFORM.
-          </h1>
-        </div>
+      {/* Crousel Section */}
+      <div id="default-carousel" class="relative w-full" data-carousel="slide">
+          {/* <!-- Carousel wrapper --> */}
+          <div className="relative h-72 overflow-hidden rounded-base md:h-[30rem]">
+            {crousalImages.map((src, index) => (
+              <div
+                key={index}
+                className={`duration-700 ease-in-out ${
+                  index === 0 ? "" : "hidden"
+                }`}
+                data-carousel-item={index === 0 ? "active" : ""}
+              >
+                <img
+                  src={src}
+                  alt={`slide-${index}`}
+                  className="absolute block w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+          {/* <!-- Slider indicators --> */}
+          <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+              <button type="button" class="w-3 h-3 rounded-base" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
+              <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
+              <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
+              <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
+              <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
+          </div>
+          {/* <!-- Slider controls --> */}
+          <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                  <svg class="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
+                  <span class="sr-only">Previous</span>
+              </span>
+          </button>
+          <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                  <svg class="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+                  <span class="sr-only">Next</span>
+              </span>
+          </button>
       </div>
+
 
       {/* Who We Are Section */}
       <div className="flex flex-col md:flex-row justify-around items-center py-8 md:py-12 px-2 md:px-8 gap-8">
