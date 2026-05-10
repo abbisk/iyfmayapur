@@ -56,12 +56,13 @@ export default function Footer3D() {
               <li className="hover:text-blue-300 cursor-pointer"><a href="/courses">Courses</a></li>
               <li className="hover:text-blue-300 cursor-pointer"><a href="/events">Events</a></li>
               <li className="hover:text-blue-300 cursor-pointer"><a href="/donation">Donate</a></li>
+              <li className="hover:text-blue-300 cursor-pointer"><a href="/gallery">Gallery</a></li>
             </ul>
           </div>
 
           {/* Journey */}
           <div style={{ transform: "translateZ(30px)" }}>
-            <h3 className="font-semibold mb-3">Journey</h3>
+            <h3 className="font-semibold mb-3">Course Journey</h3>
             <ul className="space-y-2 text-sm">
               <li>Visitor</li>
               <li>Seeker</li>
