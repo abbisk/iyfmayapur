@@ -1,5 +1,13 @@
 # React + Vite
 
+## Event registration Google Form
+
+The **Alumni Camp 2026 — Jagannath Puri** event is already connected to its dedicated Google Form and submits Full Name, Mobile No, Japa Count, and Date using the form's matching field IDs.
+
+The event registration form posts directly to Google Forms. Copy `.env.example` to `.env`, then replace the form URL and every `entry.*` value with the values from your Google Form. Create fields for full name, email, phone, city, age, occupation/college, event, and message.
+
+To find a field ID, open the Google Form, choose **Get pre-filled link**, enter recognizable sample values, and inspect the generated link. Each field appears as an `entry.123456=value` query parameter. Restart the Vite dev server after updating `.env`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

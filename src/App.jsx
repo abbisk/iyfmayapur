@@ -8,6 +8,7 @@ import PageNotFound from './pages/PageNotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Footer from './components/Footer.jsx'
 import Gallery from "./pages/Gallery.jsx"
+import EventDetails from './pages/EventDetails.jsx'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/sp" element={<Sp />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/events/:eventSlug" element={<EventDetails />} />
           <Route path="/seva" element={<Seva />} />
           <Route path="/store" element={<Store />} />
           <Route path="/donation" element={<Donation />} />

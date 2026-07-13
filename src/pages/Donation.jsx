@@ -7,27 +7,27 @@ const schemes = [
   {
     title: "Gauranga Sevak",
     amount: "₹10,000+",
-    image: "https://images.unsplash.com/photo-1609921212029-bb5a28e60960?q=80&w=1200&auto=format&fit=crop",
+    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Gauranga.jpg?raw=true",
   },
   {
     title: "Nityananda Sevak",
     amount: "₹5,000+",
-    image: "https://images.unsplash.com/photo-1604908176997-431c2a88c205?q=80&w=1200&auto=format&fit=crop",
+    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Nityanand.jpg?raw=true",
   },
   {
     title: "Adwaita Sevak",
     amount: "₹3,000+",
-    image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=1200&auto=format&fit=crop",
+    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Adwait.jpg?raw=true",
   },
   {
     title: "Gadadhar Sevak",
     amount: "₹1,000+",
-    image: "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?q=80&w=1200&auto=format&fit=crop",
+    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Gadadhar.jpg?raw=true",
   },
   {
     title: "Srivasa Sevak",
     amount: "< ₹1,000",
-    image: "https://images.unsplash.com/photo-1578926288207-a90a5366759d?q=80&w=1200&auto=format&fit=crop",
+    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Srivas.jpg?raw=true",
   },
 ]
 

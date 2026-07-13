@@ -1,0 +1,55 @@
+export const events = [
+  {
+    slug: 'alumni-camp-jagannath-puri-2026',
+    title: 'Alumni Camp 2026 — Jagannath Puri',
+    category: 'Alumni Camp',
+    image: '/home.jpg',
+    date: '2026 • Dates to be confirmed',
+    location: 'Jagannath Puri, Odisha',
+    duration: 'Multi-day camp',
+    registrationType: 'jagannath-puri',
+    summary: 'Reconnect with the alumni community through harinam, spiritual association and a memorable camp in sacred Jagannath Puri.',
+    description: 'Created for our alumni community, this camp is an opportunity to reconnect, deepen our spiritual practice and experience the sacred atmosphere of Sri Purushottam Kshetra together.',
+    highlights: ['Harinam sankirtan and japa', 'Guided visits to sacred places', 'Alumni association and shared memories'],
+  },
+  {
+    slug: 'anubhava-youth-festival',
+    title: 'Anubhava Youth Festival',
+    category: 'Youth Festival',
+    image: '/anubhava.jpg',
+    date: 'Dates announced soon',
+    location: 'Sridham Mayapur',
+    duration: 'Full-day celebration',
+    summary: 'A vibrant youth festival filled with wisdom, kirtan, friendship, creativity and experiences that nourish the heart.',
+    description: 'Anubhava brings young minds together for an uplifting celebration of purpose and spirituality. Expect inspiring talks, soulful kirtan, interactive activities and the warmth of a community growing together.',
+    highlights: ['Inspiring talks for young minds', 'Soulful kirtan and cultural programs', 'Interactive activities and prasadam'],
+  },
+  {
+    slug: 'lifestyle-management-seminar',
+    title: 'Lifestyle Management Seminar',
+    category: 'Seminar',
+    image: '/LifestyleManagement.jpeg',
+    date: 'Dates announced soon',
+    location: 'IYF Mayapur',
+    duration: 'Half-day seminar',
+    summary: 'Simple, practical tools to manage time, habits, stress and relationships while living a balanced, purposeful life.',
+    description: 'This practical seminar connects timeless wisdom with the challenges of modern life. Learn how small, sustainable changes can bring clarity to your routine, relationships and personal goals.',
+    highlights: ['Practical habit-building tools', 'Guidance for stress and time management', 'Live discussion and questions'],
+  },
+  {
+    slug: 'mayapur-summer-camp',
+    title: 'Mayapur Summer Camp',
+    category: 'Camp',
+    image: '/mayapurSummerCamp.png',
+    date: 'Dates announced soon',
+    location: 'Sridham Mayapur',
+    duration: 'Multi-day camp',
+    summary: 'An immersive spiritual camp with friendships, nature, learning, seva and memorable adventures in sacred Mayapur.',
+    description: 'Step away from the everyday rush and spend meaningful days in the peaceful atmosphere of Mayapur. The camp blends spiritual learning, team activities, seva and recreation into one unforgettable experience.',
+    highlights: ['Stay in the sacred land of Mayapur', 'Team games, workshops and seva', 'Kirtan, wisdom sessions and prasadam'],
+  },
+]
+
+export function getEventBySlug(slug) {
+  return events.find((event) => event.slug === slug)
+}
