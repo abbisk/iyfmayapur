@@ -1,238 +1,331 @@
-"use client"
+import { useEffect, useMemo, useState } from "react";
+import {
+  FiArrowRight,
+  FiBookOpen,
+  FiCheck,
+  FiHeart,
+  FiMinus,
+  FiPlus,
+  FiSearch,
+  FiShoppingBag,
+  FiStar,
+  FiTrash2,
+  FiX,
+} from "react-icons/fi";
 
-import { useEffect, useState } from "react"
+const books = [
+  {
+    id: "bg-as-it-is",
+    title: "Bhagavad-gītā As It Is",
+    category: "Bhagavad-gītā",
+    format: "Hardcover",
+    price: 499,
+    originalPrice: 599,
+    rating: "4.9",
+    badge: "Bestseller",
+    coverPosition: "0% 0%",
+    description: "The complete edition with original Sanskrit, translations, and illuminating purports.",
+  },
+  {
+    id: "srimad-bhagavatam",
+    title: "Śrīmad-Bhāgavatam — Canto 1",
+    category: "Śrīmad-Bhāgavatam",
+    format: "Hardcover",
+    price: 699,
+    originalPrice: 799,
+    rating: "4.9",
+    badge: "Essential",
+    coverPosition: "50% 0%",
+    description: "The timeless narration of spiritual history, philosophy, devotion, and divine wisdom.",
+  },
+  {
+    id: "science-self-realization",
+    title: "The Science of Self-Realization",
+    category: "Wisdom",
+    format: "Paperback",
+    price: 249,
+    originalPrice: 299,
+    rating: "4.8",
+    badge: "Reader favourite",
+    coverPosition: "100% 0%",
+    description: "Clear conversations and essays addressing life, consciousness, meditation, and the self.",
+  },
+  {
+    id: "nectar-devotion",
+    title: "The Nectar of Devotion",
+    category: "Bhakti-yoga",
+    format: "Paperback",
+    price: 399,
+    originalPrice: 449,
+    rating: "4.8",
+    badge: "Bhakti classic",
+    coverPosition: "0% 100%",
+    description: "A practical and profound guide to the complete science of devotional service.",
+  },
+  {
+    id: "teachings-caitanya",
+    title: "Teachings of Lord Caitanya",
+    category: "Bhakti-yoga",
+    format: "Hardcover",
+    price: 449,
+    originalPrice: 525,
+    rating: "4.9",
+    badge: "Classic",
+    coverPosition: "50% 100%",
+    description: "The essential teachings of Śrī Caitanya Mahāprabhu presented with clarity and depth.",
+  },
+  {
+    id: "krsna-book",
+    title: "Kṛṣṇa — The Supreme Personality of Godhead",
+    category: "Kṛṣṇa Book",
+    format: "Hardcover",
+    price: 599,
+    originalPrice: 699,
+    rating: "5.0",
+    badge: "Family favourite",
+    coverPosition: "100% 100%",
+    description: "A captivating narration of Lord Kṛṣṇa’s extraordinary pastimes and teachings.",
+  },
+];
+
+const categories = ["All books", "Bhagavad-gītā", "Śrīmad-Bhāgavatam", "Bhakti-yoga", "Wisdom", "Kṛṣṇa Book"];
+
+const readStorage = (key) => {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? [];
+  } catch {
+    return [];
+  }
+};
 
 export default function Store() {
-  const [cart, setCart] = useState([])
-  const [wishlist, setWishlist] = useState([])
-
-  const books = [
-    {
-      id: 1,
-      title: "Atomic Habits",
-      price: 499,
-      image: "https://images-na.ssl-images-amazon.com/images/I/91bYsX41DVL.jpg"
-    },
-    {
-      id: 2,
-      title: "Rich Dad Poor Dad",
-      price: 399,
-      image: "https://images-na.ssl-images-amazon.com/images/I/81bsw6fnUiL.jpg"
-    },
-    {
-      id: 3,
-      title: "The Psychology of Money",
-      price: 450,
-      image: "https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL.jpg"
-    }
-  ]
-
-  /* ================= LOAD FROM STORAGE ================= */
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || []
-    const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || []
-    setCart(savedCart)
-    setWishlist(savedWishlist)
-  }, [])
-
-  /* ================= SAVE TO STORAGE ================= */
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart))
-  }, [cart])
+  const [cart, setCart] = useState(() => readStorage("prabhupada-book-cart"));
+  const [wishlist, setWishlist] = useState(() => readStorage("prabhupada-book-wishlist"));
+  const [activeCategory, setActiveCategory] = useState("All books");
+  const [search, setSearch] = useState("");
+  const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist))
-  }, [wishlist])
+    localStorage.setItem("prabhupada-book-cart", JSON.stringify(cart));
+  }, [cart]);
 
-  /* ================= CART LOGIC ================= */
+  useEffect(() => {
+    localStorage.setItem("prabhupada-book-wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const filteredBooks = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return books.filter((book) => {
+      const matchesCategory = activeCategory === "All books" || book.category === activeCategory;
+      const matchesSearch = !term || `${book.title} ${book.category} ${book.description}`.toLowerCase().includes(term);
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, search]);
+
+  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const shipping = subtotal >= 999 || subtotal === 0 ? 0 : 79;
+  const total = subtotal + shipping;
+
   const addToCart = (book) => {
-    const existing = cart.find((item) => item.id === book.id)
+    setCart((current) => {
+      const existing = current.find((item) => item.id === book.id);
+      return existing
+        ? current.map((item) => item.id === book.id ? { ...item, qty: item.qty + 1 } : item)
+        : [...current, { ...book, qty: 1 }];
+    });
+    setCartOpen(true);
+  };
 
-    if (existing) {
-      setCart(
-        cart.map((item) =>
-          item.id === book.id
-            ? { ...item, qty: item.qty + 1 }
-            : item
-        )
-      )
-    } else {
-      setCart([...cart, { ...book, qty: 1 }])
-    }
-  }
+  const updateQuantity = (id, change) => {
+    setCart((current) => current
+      .map((item) => item.id === id ? { ...item, qty: item.qty + change } : item)
+      .filter((item) => item.qty > 0));
+  };
 
-  const increaseQty = (id) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item
-      )
-    )
-  }
-
-  const decreaseQty = (id) => {
-    setCart(
-      cart
-        .map((item) =>
-          item.id === id ? { ...item, qty: item.qty - 1 } : item
-        )
-        .filter((item) => item.qty > 0)
-    )
-  }
-
-  const removeItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id))
-  }
-
-  /* ================= WISHLIST ================= */
   const toggleWishlist = (book) => {
-    if (wishlist.find((b) => b.id === book.id)) {
-      setWishlist(wishlist.filter((b) => b.id !== book.id))
-    } else {
-      setWishlist([...wishlist, book])
-    }
-  }
-
-  /* ================= TOTAL ================= */
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+    setWishlist((current) => current.some((item) => item.id === book.id)
+      ? current.filter((item) => item.id !== book.id)
+      : [...current, book]);
+  };
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">📚 Book Store</h1>
+    <div className="book-store-page">
+      <section className="book-store-hero">
+        <img src="/store/prabhupada-books-hero.png" alt="A collection of devotional books" />
+        <div className="book-store-shell book-store-hero__content">
+          <p className="book-store-eyebrow">Transcendental literature</p>
+          <h1>Books by<br />Śrīla Prabhupāda</h1>
+          <p>Timeless wisdom for a thoughtful, joyful, and spiritually fulfilled life.</p>
+          <a href="#book-collection">Explore the collection <FiArrowRight /></a>
+        </div>
+      </section>
 
-      {/* BOOK LIST */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {books.map((book) => (
-          <div key={book.id} className="border p-4 rounded-xl shadow-md">
+      <section className="book-store-benefits book-store-shell" aria-label="Store benefits">
+        <div><span><FiBookOpen /></span><p><strong>Authentic editions</strong><small>Original teachings and purports</small></p></div>
+        <div><span><FiShoppingBag /></span><p><strong>Carefully packed</strong><small>Books delivered with care</small></p></div>
+        <div><span><FiCheck /></span><p><strong>Free shipping</strong><small>On orders above ₹999</small></p></div>
+      </section>
 
-            <img
-              src={book.image}
-              className="w-full h-60 object-cover rounded-md"
-            />
-
-            <h2 className="text-xl font-semibold mt-3">{book.title}</h2>
-            <p className="text-gray-600">₹{book.price}</p>
-
-            <div className="flex justify-between items-center mt-4">
-              <button
-                onClick={() => addToCart(book)}
-                className="bg-blue-500 text-white px-3 py-1 rounded-lg"
-              >
-                Add to Cart
-              </button>
-
-              <button onClick={() => toggleWishlist(book)}>
-                {wishlist.find((b) => b.id === book.id) ? "❤️" : "🤍"}
-              </button>
-            </div>
+      <section className="book-store-shell book-collection" id="book-collection">
+        <div className="book-collection__header">
+          <div>
+            <p className="book-store-eyebrow">The Bhaktivedanta library</p>
+            <h2>Find your next book</h2>
           </div>
-        ))}
-      </div>
+          <button type="button" className="book-cart-button" onClick={() => setCartOpen(true)}>
+            <FiShoppingBag /> Cart <span>{cartCount}</span>
+          </button>
+        </div>
 
-      {/* CART */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">🛒 Cart</h2>
-
-        {cart.length === 0 ? (
-          <p>No items in cart</p>
-        ) : (
-          cart.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center border p-3 mb-2 rounded-lg"
-            >
-              <div>
-                <p>{item.title}</p>
-                <p>₹{item.price}</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button onClick={() => decreaseQty(item.id)} className="px-2 bg-gray-300">-</button>
-                <span>{item.qty}</span>
-                <button onClick={() => increaseQty(item.id)} className="px-2 bg-gray-300">+</button>
-              </div>
-
-              <div>
-                ₹{item.price * item.qty}
-              </div>
-
+        <div className="book-store-toolbar">
+          <div className="book-store-categories">
+            {categories.map((category) => (
               <button
-                onClick={() => removeItem(item.id)}
-                className="text-red-500"
+                type="button"
+                key={category}
+                className={activeCategory === category ? "is-active" : ""}
+                onClick={() => setActiveCategory(category)}
               >
-                ❌
+                {category}
               </button>
-            </div>
-          ))
+            ))}
+          </div>
+          <label className="book-store-search">
+            <FiSearch />
+            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search books" />
+          </label>
+        </div>
+
+        {filteredBooks.length ? (
+          <div className="book-grid">
+            {filteredBooks.map((book) => {
+              const wished = wishlist.some((item) => item.id === book.id);
+              return (
+                <article className="book-card" key={book.id}>
+                  <div className="book-card__visual">
+                    <span className="book-card__badge">{book.badge}</span>
+                    <button
+                      type="button"
+                      className={`book-card__heart ${wished ? "is-active" : ""}`}
+                      onClick={() => toggleWishlist(book)}
+                      aria-label={wished ? `Remove ${book.title} from wishlist` : `Add ${book.title} to wishlist`}
+                    >
+                      <FiHeart />
+                    </button>
+                    <div
+                      className="book-card__cover"
+                      role="img"
+                      aria-label={`Illustrated cover for ${book.title}`}
+                      style={{ backgroundPosition: book.coverPosition }}
+                    />
+                    <span className="book-card__cover-title">{book.title}</span>
+                  </div>
+                  <div className="book-card__body">
+                    <p className="book-card__category">{book.category} · {book.format}</p>
+                    <h3>{book.title}</h3>
+                    <p className="book-card__description">{book.description}</p>
+                    <div className="book-card__rating"><FiStar /> <strong>{book.rating}</strong> <span>Reader rating</span></div>
+                    <div className="book-card__footer">
+                      <p><strong>₹{book.price}</strong><del>₹{book.originalPrice}</del></p>
+                      <button type="button" onClick={() => addToCart(book)}><FiShoppingBag /> Add</button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="book-store-empty-search"><FiBookOpen /><h3>No books found</h3><p>Try another title or category.</p></div>
         )}
+      </section>
 
-        <h3 className="text-xl font-bold mt-4">Total: ₹{total}</h3>
-      </div>
+      {cartOpen && <button type="button" className="book-cart-overlay" onClick={() => setCartOpen(false)} aria-label="Close cart" />}
+      <aside className={`book-cart-drawer ${cartOpen ? "is-open" : ""}`} aria-hidden={!cartOpen}>
+        <div className="book-cart-drawer__header">
+          <div><p>Your cart</p><span>{cartCount} {cartCount === 1 ? "book" : "books"}</span></div>
+          <button type="button" onClick={() => setCartOpen(false)} aria-label="Close cart"><FiX /></button>
+        </div>
 
-      {/* PAYMENT */}
-      <RazorApp amount={total} />
+        <div className="book-cart-drawer__items">
+          {cart.length === 0 ? (
+            <div className="book-cart-empty"><FiShoppingBag /><h3>Your cart is empty</h3><p>Discover a book to begin your spiritual library.</p><button type="button" onClick={() => setCartOpen(false)}>Continue browsing</button></div>
+          ) : cart.map((item) => (
+            <div className="book-cart-item" key={item.id}>
+              <div className="book-cart-item__cover" style={{ backgroundPosition: item.coverPosition }} />
+              <div className="book-cart-item__info">
+                <strong>{item.title}</strong>
+                <span>{item.format}</span>
+                <div className="book-cart-item__bottom">
+                  <div className="book-quantity">
+                    <button type="button" onClick={() => updateQuantity(item.id, -1)} aria-label={`Decrease ${item.title} quantity`}><FiMinus /></button>
+                    <span>{item.qty}</span>
+                    <button type="button" onClick={() => updateQuantity(item.id, 1)} aria-label={`Increase ${item.title} quantity`}><FiPlus /></button>
+                  </div>
+                  <strong>₹{item.price * item.qty}</strong>
+                </div>
+              </div>
+              <button type="button" className="book-cart-item__remove" onClick={() => setCart((current) => current.filter((book) => book.id !== item.id))} aria-label={`Remove ${item.title}`}><FiTrash2 /></button>
+            </div>
+          ))}
+        </div>
+
+        {cart.length > 0 && (
+          <div className="book-cart-summary">
+            <p><span>Subtotal</span><strong>₹{subtotal}</strong></p>
+            <p><span>Shipping</span><strong>{shipping === 0 ? "Free" : `₹${shipping}`}</strong></p>
+            <div><span>Total</span><strong>₹{total}</strong></div>
+            <CheckoutButton amount={total} />
+            <small>Secure checkout · Prices include applicable taxes</small>
+          </div>
+        )}
+      </aside>
     </div>
-  )
+  );
 }
-
-
-/* ================= RAZORPAY ================= */
 
 function loadScript(src) {
   return new Promise((resolve) => {
-    const script = document.createElement("script")
-    script.src = src
-    script.onload = () => resolve(true)
-    script.onerror = () => resolve(false)
-    document.body.appendChild(script)
-  })
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) return resolve(true);
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
 }
 
-function RazorApp({ amount }) {
-
-  async function displayRazorpay() {
-    if (amount <= 0) {
-      alert("Cart is empty!")
-      return
+function CheckoutButton({ amount }) {
+  const displayRazorpay = async () => {
+    const loaded = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!loaded) {
+      window.alert("The secure checkout could not be loaded. Please try again.");
+      return;
     }
 
-    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js")
-
-    if (!res) {
-      alert("Razorpay failed to load!")
-      return
+    try {
+      const response = await fetch("http://localhost:1769/razorpay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await response.json();
+      const payment = new window.Razorpay({
+        key: "YOUR_KEY_ID",
+        amount: data.amount,
+        currency: "INR",
+        name: "IYF Mayapur Book Store",
+        description: "Śrīla Prabhupāda book purchase",
+        order_id: data.id,
+        callback_url: "http://localhost:1769/verify",
+        theme: { color: "#8b3f27" },
+      });
+      payment.open();
+    } catch {
+      window.alert("Checkout is not connected yet. Please start the payment server and try again.");
     }
+  };
 
-    const data = await fetch("http://localhost:1769/razorpay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ amount })
-    }).then((t) => t.json())
-
-    const options = {
-      key: "YOUR_KEY_ID",
-      amount: data.amount,
-      currency: "INR",
-      name: "Book Store",
-      description: "Book Purchase",
-      order_id: data.id,
-      callback_url: "http://localhost:1769/verify",
-      theme: { color: "#3399cc" }
-    }
-
-    const paymentObject = new window.Razorpay(options)
-    paymentObject.open()
-  }
-
-  return (
-    <div className="mt-6">
-      <button
-        onClick={displayRazorpay}
-        className="bg-green-600 text-white px-6 py-2 rounded-xl"
-      >
-        Pay ₹{amount}
-      </button>
-    </div>
-  )
+  return <button type="button" className="book-checkout-button" onClick={displayRazorpay}>Proceed to checkout <FiArrowRight /></button>;
 }

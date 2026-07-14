@@ -3,28 +3,6 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { FiArrowLeft, FiCalendar, FiCheck, FiClock, FiMapPin, FiUsers } from 'react-icons/fi'
 import { getEventBySlug } from '../data/events.js'
 
-const googleForm = {
-  url: import.meta.env.VITE_GOOGLE_FORM_URL,
-  name: import.meta.env.VITE_GOOGLE_FORM_NAME_FIELD,
-  email: import.meta.env.VITE_GOOGLE_FORM_EMAIL_FIELD,
-  phone: import.meta.env.VITE_GOOGLE_FORM_PHONE_FIELD,
-  city: import.meta.env.VITE_GOOGLE_FORM_CITY_FIELD,
-  age: import.meta.env.VITE_GOOGLE_FORM_AGE_FIELD,
-  occupation: import.meta.env.VITE_GOOGLE_FORM_OCCUPATION_FIELD,
-  event: import.meta.env.VITE_GOOGLE_FORM_EVENT_FIELD,
-  message: import.meta.env.VITE_GOOGLE_FORM_MESSAGE_FIELD,
-}
-
-const jagannathPuriForm = {
-  url: 'https://docs.google.com/forms/d/e/1FAIpQLSfEOZLmBt0DYKxdLKYOxTkCwIa3qUF1jc_b8cwtRXpSq5Kz5g/viewform',
-  name: 'entry.997006378',
-  phone: 'entry.1450428578',
-  japaCount: 'entry.1973636941',
-  date: 'entry.152846947',
-}
-
-const genericGoogleFields = ['url', 'name', 'email', 'phone', 'city', 'age', 'occupation', 'event', 'message']
-
 function getResponseUrl(url) {
   return url?.replace(/\/viewform(?:\?.*)?$/, '/formResponse')
 }
@@ -38,9 +16,12 @@ export default function EventDetails() {
 
   if (!event) return <Navigate to="/events" replace />
 
-  const isJagannathPuriCamp = event.registrationType === 'jagannath-puri'
-  const activeGoogleForm = isJagannathPuriCamp ? jagannathPuriForm : googleForm
-  const isGoogleFormConfigured = isJagannathPuriCamp || genericGoogleFields.every((field) => googleForm[field])
+  const activeGoogleForm = event.registrationForm
+  const isGoogleFormConfigured = Boolean(
+    activeGoogleForm?.url &&
+    activeGoogleForm.fields?.length &&
+    activeGoogleForm.fields.every((field) => field.entry),
+  )
 
   const handleSubmit = (submitEvent) => {
     if (!isGoogleFormConfigured) {
@@ -100,22 +81,25 @@ export default function EventDetails() {
         </article>
 
         <aside id="registration" className="h-fit rounded-[1.75rem] border border-[#e9dfcd] bg-white p-6 shadow-[0_20px_50px_rgba(75,55,24,0.12)] sm:p-8 lg:sticky lg:top-24">
-          {status === 'success' ? (
+          {!activeGoogleForm ? (
+            <div className="py-10 text-center">
+              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#f5ead7] text-2xl text-[#a85e19]"><FiCalendar /></span>
+              <p className="mt-5 text-sm font-bold uppercase tracking-[0.2em] text-[#b66d24]">Coming soon</p>
+              <h2 className="mt-2 text-2xl font-black">Registration opening soon</h2>
+              <p className="mt-3 leading-7 text-stone-600">The registration form for {event.title} will be available here once it is announced.</p>
+            </div>
+          ) : status === 'success' ? (
             <div className="py-12 text-center" role="status">
               <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#dfeeda] text-3xl text-[#276244]"><FiCheck /></span>
-              <h2 className="mt-5 text-2xl font-black">{isJagannathPuriCamp ? 'Response received!' : 'Registration received!'}</h2>
-              <p className="mt-3 leading-7 text-stone-600">
-                {isJagannathPuriCamp ? `Thank you. Your response for ${event.title} has been submitted.` : `Thank you for your interest in ${event.title}. Our team will contact you with the next steps.`}
-              </p>
+              <h2 className="mt-5 text-2xl font-black">Response received!</h2>
+              <p className="mt-3 leading-7 text-stone-600">Thank you. Your response for {event.title} has been submitted.</p>
               <button type="button" onClick={() => setStatus('idle')} className="mt-6 font-bold text-[#a85e19] hover:underline">Submit another response</button>
             </div>
           ) : (
             <>
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#b66d24]">{isJagannathPuriCamp ? 'Camp response' : 'Reserve your place'}</p>
-              <h2 className="mt-2 text-2xl font-black">{isJagannathPuriCamp ? 'Share your details' : 'Register your interest'}</h2>
-              <p className="mt-2 text-sm leading-6 text-stone-500">
-                {isJagannathPuriCamp ? 'Enter the details requested for the Jagannath Puri alumni camp.' : 'Fill in your details and we’ll share the schedule and registration information.'}
-              </p>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#b66d24]">{activeGoogleForm.eyebrow || 'Reserve your place'}</p>
+              <h2 className="mt-2 text-2xl font-black">{activeGoogleForm.title || 'Register your interest'}</h2>
+              <p className="mt-2 text-sm leading-6 text-stone-500">{activeGoogleForm.description || 'Fill in your details to register for this event.'}</p>
 
               <form
                 ref={formRef}
@@ -125,39 +109,14 @@ export default function EventDetails() {
                 target="google-form-response"
                 onSubmit={handleSubmit}
               >
-                {isJagannathPuriCamp ? (
-                  <>
-                    <FormField label="Full name" name={activeGoogleForm.name} type="text" placeholder="Your full name" autoComplete="name" />
-                    <FormField label="Mobile number" name={activeGoogleForm.phone} type="tel" placeholder="Your mobile number" autoComplete="tel" pattern="[0-9+() -]{7,18}" />
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <FormField label="Japa count" name={activeGoogleForm.japaCount} type="number" placeholder="Number of rounds" min="0" />
-                      <FormField label="Date" name={activeGoogleForm.date} type="date" />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <input type="hidden" name={activeGoogleForm.event} value={event.title} />
-                    <FormField label="Full name" name={activeGoogleForm.name} type="text" placeholder="Your full name" autoComplete="name" />
-                    <FormField label="Email address" name={activeGoogleForm.email} type="email" placeholder="you@example.com" autoComplete="email" />
-                    <FormField label="Phone number" name={activeGoogleForm.phone} type="tel" placeholder="Your phone number" autoComplete="tel" pattern="[0-9+() -]{7,18}" />
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <FormField label="City" name={activeGoogleForm.city} type="text" placeholder="Your city" autoComplete="address-level2" />
-                      <FormField label="Age" name={activeGoogleForm.age} type="number" placeholder="Age" min="12" max="100" />
-                    </div>
-                    <FormField label="Occupation / college" name={activeGoogleForm.occupation} type="text" placeholder="What do you do?" />
-                    <label className="block text-sm font-bold text-stone-700">
-                      Message <span className="font-normal text-stone-400">(optional)</span>
-                      <textarea name={activeGoogleForm.message} rows="3" placeholder="Anything you would like us to know?" className="mt-2 w-full resize-none rounded-xl border border-stone-200 bg-[#fffcf7] px-4 py-3 font-normal outline-none transition placeholder:text-stone-400 focus:border-[#b87934] focus:ring-4 focus:ring-[#d99a43]/10" />
-                    </label>
-                  </>
-                )}
+                {activeGoogleForm.fields.map((field) => <FormField key={field.entry} field={field} />)}
 
                 {configurationError && (
-                  <p className="rounded-xl bg-red-50 p-3 text-sm leading-5 text-red-700" role="alert">Google Form settings are missing. Add the form URL and field IDs to your <code>.env</code> file.</p>
+                  <p className="rounded-xl bg-red-50 p-3 text-sm leading-5 text-red-700" role="alert">This event’s Google Form configuration is incomplete. Check its URL and field IDs in <code>events.js</code>.</p>
                 )}
 
                 <button disabled={status === 'submitting'} className="w-full rounded-xl bg-[#276244] px-5 py-3.5 font-extrabold text-white shadow-lg shadow-[#276244]/15 transition hover:bg-[#1d5037] disabled:cursor-wait disabled:opacity-70">
-                  {status === 'submitting' ? 'Sending response…' : isJagannathPuriCamp ? 'Submit response' : 'Register for this event'}
+                  {status === 'submitting' ? 'Sending response…' : activeGoogleForm.submitLabel || 'Register for this event'}
                 </button>
                 <p className="text-center text-xs leading-5 text-stone-400">Your response is securely submitted to our Google Form.</p>
               </form>
@@ -179,11 +138,17 @@ function Info({ icon, label, value }) {
   )
 }
 
-function FormField({ label, ...inputProps }) {
+function FormField({ field }) {
+  const { label, entry, required, type = 'text', ...inputProps } = field
+
   return (
     <label className="block text-sm font-bold text-stone-700">
-      {label}
-      <input required {...inputProps} className="mt-2 w-full rounded-xl border border-stone-200 bg-[#fffcf7] px-4 py-3 font-normal outline-none transition placeholder:text-stone-400 focus:border-[#b87934] focus:ring-4 focus:ring-[#d99a43]/10" />
+      {label}{!required && <span className="font-normal text-stone-400"> (optional)</span>}
+      {type === 'textarea' ? (
+        <textarea name={entry} required={required} {...inputProps} className="mt-2 w-full resize-none rounded-xl border border-stone-200 bg-[#fffcf7] px-4 py-3 font-normal outline-none transition placeholder:text-stone-400 focus:border-[#b87934] focus:ring-4 focus:ring-[#d99a43]/10" />
+      ) : (
+        <input name={entry} required={required} type={type} {...inputProps} className="mt-2 w-full rounded-xl border border-stone-200 bg-[#fffcf7] px-4 py-3 font-normal outline-none transition placeholder:text-stone-400 focus:border-[#b87934] focus:ring-4 focus:ring-[#d99a43]/10" />
+      )}
     </label>
   )
 }

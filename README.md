@@ -2,11 +2,11 @@
 
 ## Event registration Google Form
 
-The **Alumni Camp 2026 — Jagannath Puri** event is already connected to its dedicated Google Form and submits Full Name, Mobile No, Japa Count, and Date using the form's matching field IDs.
+Each event can have its own Google Form URL and its own questions. Add a `registrationForm` object to that event in `src/data/events.js`, containing its `url` and `fields`. Events without this object display “Registration opening soon” and never submit to another event's form.
 
-The event registration form posts directly to Google Forms. Copy `.env.example` to `.env`, then replace the form URL and every `entry.*` value with the values from your Google Form. Create fields for full name, email, phone, city, age, occupation/college, event, and message.
+The **Alumni Camp 2026 — Jagannath Puri** event is connected only to its dedicated Google Form and submits Full Name, Mobile No, Japa Count, and Date using that form's matching field IDs.
 
-To find a field ID, open the Google Form, choose **Get pre-filled link**, enter recognizable sample values, and inspect the generated link. Each field appears as an `entry.123456=value` query parameter. Restart the Vite dev server after updating `.env`.
+To find a field ID for another event, open its Google Form, choose **Get pre-filled link**, enter recognizable sample values, and inspect the generated link. Each field appears as an `entry.123456=value` query parameter.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

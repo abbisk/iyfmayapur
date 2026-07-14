@@ -28,6 +28,7 @@ function App() {
           <Route path="/course/:courseId" element={<ViewCourse />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/player" element={<Player />} />
+          <Route path="/player/:courseId" element={<Player />} />
           <Route path="*" element={<PageNotFound />} />
           <Route path="/gallery" element={<Gallery />} />
         </Routes>
