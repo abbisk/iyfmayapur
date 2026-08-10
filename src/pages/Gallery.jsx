@@ -1,420 +1,112 @@
-// src/components/ImageGallery.jsx
+import { useEffect, useState } from "react";
+import { FiArrowDown, FiX } from "react-icons/fi";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { IoClose } from "react-icons/io5";
+const youthImageNumbers = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 
-const gallery = Array.from(
-  { length: 50 },
-  (_, index) => `/gallery/G${index + 1}.jpeg`
+const allGalleryImages = [
+  ...Array.from({ length: 34 }, (_, index) => `/gallery/G${index + 1}.jpeg`),
+  "/home/youth.jpg",
+  ...youthImageNumbers.map((number) => `/home/youth${number}.jpeg`),
+  ...Array.from({ length: 12 }, (_, index) => `/life/img${index}.jpg`),
+];
+
+const uniqueGalleryImages = allGalleryImages.filter(
+  (image, index, images) => images.indexOf(image) === index
 );
 
-export default function ImageGallery() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [loadedImages, setLoadedImages] = useState(gallery);
+const imageColumns = Array.from({ length: 4 }, (_, columnIndex) =>
+  uniqueGalleryImages.filter((_, imageIndex) => imageIndex % 4 === columnIndex)
+);
 
-  // Remove broken images automatically
-  const handleImageError = (img) => {
-    setLoadedImages((prev) => prev.filter((item) => item !== img));
-  };
+export default function Gallery() {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (!selectedImage) return undefined;
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setSelectedImage(null);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [selectedImage]);
 
   return (
-    <div className="gallery-wrapper">
+    <div className="infinite-gallery-page">
+      <header className="infinite-gallery-hero">
+        <div className="infinite-gallery-hero__orb" aria-hidden="true" />
+        <div className="infinite-gallery-shell">
+          <p className="infinite-gallery-kicker">Life at IYF Mayapur</p>
+          <h1>Moments that<br />move with us.</h1>
+          <div className="infinite-gallery-hero__footer">
+            <p>
+              A living collection of friendship, wisdom, celebration and
+              service from our youth community.
+            </p>
+            <span><FiArrowDown aria-hidden="true" /> Scroll to explore</span>
+          </div>
+        </div>
+      </header>
 
-      {/* Background Glow */}
-      <div className="glow glow1"></div>
-      <div className="glow glow2"></div>
-
-      {/* Header */}
-      <div className="gallery-header">
-        <h1>Mayapur Gallery</h1>
-        <p>Spiritual Moments & Divine Memories</p>
-      </div>
-
-      {/* Responsive Gallery */}
-      <div className="gallery-grid">
-        {loadedImages.map((img, index) => (
-          <motion.div
-            key={index}
-            className="gallery-card"
-            whileHover={{
-              y: -6,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 18,
-            }}
-            onClick={() => setSelectedImage(img)}
-          >
-            <img
-              src={img}
-              alt={`gallery-${index + 1}`}
-              loading="lazy"
-              onError={() => handleImageError(img)}
-            />
-
-            <div className="overlay"></div>
-
-            <div className="content">
-              <h2>Mayapur</h2>
-              <p>Divine Experience #{index + 1}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Image Preview */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            className="preview-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-          >
-            <button
-              className="close-btn"
-              onClick={() => setSelectedImage(null)}
+      <main className="infinite-gallery-stage">
+        <div className="infinite-gallery-fade infinite-gallery-fade--top" />
+        <div className="infinite-gallery-fade infinite-gallery-fade--bottom" />
+        <div className="infinite-gallery-columns infinite-gallery-shell">
+          {imageColumns.map((column, columnIndex) => (
+            <div
+              className={`infinite-gallery-column infinite-gallery-column--${columnIndex + 1}`}
+              key={`column-${columnIndex + 1}`}
             >
-              <IoClose />
-            </button>
-
-            <motion.img
-              src={selectedImage}
-              alt="preview"
-              className="preview-image"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <style>{`
-
-        * {
-          box-sizing: border-box;
-        }
-
-        body {
-          margin: 0;
-        }
-
-        .gallery-wrapper {
-          min-height: 100vh;
-          position: relative;
-          overflow: hidden;
-          padding: 80px 20px;
-          background:
-            radial-gradient(circle at top, #1b2333 0%, #05060a 100%);
-        }
-
-        /* Header */
-
-        .gallery-header {
-          text-align: center;
-          margin-bottom: 50px;
-          position: relative;
-          z-index: 2;
-        }
-
-        .gallery-header h1 {
-          color: white;
-          font-size: clamp(32px, 6vw, 62px);
-          margin: 0;
-          font-weight: 800;
-          letter-spacing: 1px;
-          line-height: 1.1;
-        }
-
-        .gallery-header p {
-          margin-top: 14px;
-          color: rgba(255,255,255,0.7);
-          font-size: clamp(14px, 2vw, 18px);
-        }
-
-        /* Responsive Grid */
-
-        .gallery-grid {
-          position: relative;
-          z-index: 2;
-
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 22px;
-
-          max-width: 1600px;
-          margin: auto;
-        }
-
-        /* Card */
-
-        .gallery-card {
-          position: relative;
-          overflow: hidden;
-          border-radius: 24px;
-          cursor: pointer;
-
-          background: rgba(255,255,255,0.05);
-
-          border: 1px solid rgba(255,255,255,0.08);
-
-          backdrop-filter: blur(10px);
-
-          box-shadow:
-            0 10px 30px rgba(0,0,0,0.35),
-            0 0 20px rgba(255,255,255,0.03);
-
-          transition:
-            transform 0.3s ease,
-            box-shadow 0.3s ease;
-        }
-
-        .gallery-card:hover {
-          box-shadow:
-            0 20px 45px rgba(0,0,0,0.45),
-            0 0 25px rgba(255,255,255,0.06);
-        }
-
-        .gallery-card img {
-          width: 100%;
-          height: 100%;
-          min-height: 320px;
-          max-height: 520px;
-          object-fit: cover;
-          display: block;
-
-          transition: transform 0.7s ease;
-        }
-
-        .gallery-card:hover img {
-          transform: scale(1.05);
-        }
-
-        /* Overlay */
-
-        .overlay {
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(
-              to top,
-              rgba(0,0,0,0.88),
-              rgba(0,0,0,0.2),
-              transparent
-            );
-
-          opacity: 0;
-          transition: opacity 0.4s ease;
-        }
-
-        .gallery-card:hover .overlay {
-          opacity: 1;
-        }
-
-        /* Content */
-
-        .content {
-          position: absolute;
-          left: 20px;
-          bottom: 20px;
-          z-index: 3;
-
-          opacity: 0;
-          transform: translateY(20px);
-
-          transition: all 0.4s ease;
-        }
-
-        .gallery-card:hover .content {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .content h2 {
-          margin: 0;
-          color: white;
-          font-size: clamp(18px, 2vw, 28px);
-          font-weight: 700;
-        }
-
-        .content p {
-          margin-top: 8px;
-          color: rgba(255,255,255,0.72);
-          font-size: clamp(11px, 1.5vw, 14px);
-        }
-
-        /* Modal */
-
-        .preview-modal {
-          position: fixed;
-          inset: 0;
-          background: rgba(0,0,0,0.92);
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          z-index: 9999;
-
-          padding: 20px;
-        }
-
-        .preview-image {
-          width: auto;
-          height: auto;
-
-          max-width: 100%;
-          max-height: 90vh;
-
-          border-radius: 20px;
-
-          object-fit: contain;
-
-          box-shadow:
-            0 20px 60px rgba(0,0,0,0.6);
-        }
-
-        /* Close Button */
-
-        .close-btn {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-
-          width: 48px;
-          height: 48px;
-
-          border: none;
-          border-radius: 50%;
-
-          background: rgba(255,255,255,0.12);
-
-          color: white;
-          font-size: 28px;
-
-          cursor: pointer;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          backdrop-filter: blur(10px);
-
-          transition: all 0.3s ease;
-        }
-
-        .close-btn:hover {
-          background: rgba(255,255,255,0.22);
-          transform: rotate(90deg);
-        }
-
-        /* Glow */
-
-        .glow {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(120px);
-          opacity: 0.18;
-          z-index: 0;
-        }
-
-        .glow1 {
-          width: 500px;
-          height: 500px;
-          background: #ff4d6d;
-          top: -150px;
-          left: -150px;
-        }
-
-        .glow2 {
-          width: 450px;
-          height: 450px;
-          background: #6c63ff;
-          right: -120px;
-          bottom: -120px;
-        }
-
-        /* Large Desktop */
-
-        @media (min-width: 1600px) {
-          .gallery-grid {
-            grid-template-columns:
-              repeat(auto-fit, minmax(320px, 1fr));
-          }
-        }
-
-        /* Tablet */
-
-        @media (max-width: 992px) {
-
-          .gallery-wrapper {
-            padding: 60px 18px;
-          }
-
-          .gallery-grid {
-            grid-template-columns:
-              repeat(auto-fit, minmax(220px, 1fr));
-
-            gap: 18px;
-          }
-
-          .gallery-card img {
-            min-height: 260px;
-          }
-        }
-
-        /* Mobile */
-
-        @media (max-width: 576px) {
-
-          .gallery-wrapper {
-            padding: 40px 14px;
-          }
-
-          .gallery-header {
-            margin-bottom: 35px;
-          }
-
-          .gallery-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-          }
-
-          .gallery-card {
-            border-radius: 18px;
-          }
-
-          .gallery-card img {
-            min-height: 260px;
-            max-height: 420px;
-          }
-
-          .content {
-            opacity: 1;
-            transform: translateY(0);
-          }
-
-          .overlay {
-            opacity: 1;
-          }
-
-          .close-btn {
-            width: 42px;
-            height: 42px;
-            font-size: 24px;
-          }
-
-          .preview-image {
-            border-radius: 14px;
-          }
-        }
-
-      `}</style>
+              {[...column, ...column].map((src, imageIndex) => (
+                <button
+                  type="button"
+                  className="infinite-gallery-card"
+                  onClick={() => setSelectedImage(src)}
+                  key={`${src}-${imageIndex}`}
+                  aria-label={`Open IYF Mayapur gallery image ${(imageIndex % column.length) + 1}`}
+                >
+                  <img
+                    src={src}
+                    alt="A moment from life at IYF Mayapur"
+                    loading={imageIndex < 2 ? "eager" : "lazy"}
+                  />
+                  <span aria-hidden="true">View</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {selectedImage && (
+        <div
+          className="infinite-gallery-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image preview"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            type="button"
+            className="infinite-gallery-lightbox__close"
+            onClick={() => setSelectedImage(null)}
+            aria-label="Close image preview"
+          >
+            <FiX aria-hidden="true" />
+          </button>
+          <img
+            src={selectedImage}
+            alt="Enlarged moment from life at IYF Mayapur"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

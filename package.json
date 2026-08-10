@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "payment-server": "node server/payment-server.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

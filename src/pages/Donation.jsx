@@ -1,214 +1,182 @@
-"use client"
+import { useEffect, useState } from "react";
+import { FiCheckCircle, FiDownload, FiHeart, FiLock } from "react-icons/fi";
 
-import { useState } from "react"
+const amountOptions = [501, 1100, 2100, 5001];
+const initialForm = {
+  amount: "", first_name: "", middle_name: "", last_name: "", email: "", mobile: "",
+  pan_card: "", address_1: "", address_2: "", pin_code: "", district: "", city: "",
+  state: "", country: "India",
+};
 
-/* ================= DONATION SCHEME ================= */
-const schemes = [
-  {
-    title: "Gauranga Sevak",
-    amount: "₹10,000+",
-    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Gauranga.jpg?raw=true",
-  },
-  {
-    title: "Nityananda Sevak",
-    amount: "₹5,000+",
-    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Nityanand.jpg?raw=true",
-  },
-  {
-    title: "Adwaita Sevak",
-    amount: "₹3,000+",
-    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Adwait.jpg?raw=true",
-  },
-  {
-    title: "Gadadhar Sevak",
-    amount: "₹1,000+",
-    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Gadadhar.jpg?raw=true",
-  },
-  {
-    title: "Srivasa Sevak",
-    amount: "< ₹1,000",
-    image: "https://github.com/abbisk/Static/blob/abbisk/IYF/public/donation/Srivas.jpg?raw=true",
-  },
-]
+async function readApiResponse(response) {
+  const body = await response.text();
 
-/* ================= CATEGORIES ================= */
-const categories = [
-  {
-    id: 1,
-    title: "🐄 Gau Seva",
-    desc: "Support cow protection & feeding",
-    image: "https://images.unsplash.com/photo-1598514982846-1cf9a2f0e3c7?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "🍛 Annadaan",
-    desc: "Feed the needy & pilgrims",
-    image: "https://images.unsplash.com/photo-1604908554161-c9d1d0dff78c?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "🛕 Temple Seva",
-    desc: "Maintain temple services",
-    image: "https://images.unsplash.com/photo-1582560475093-ba66accbc424?q=80&w=1200&auto=format&fit=crop",
-  },
-]
+  if (!body.trim()) {
+    throw new Error(
+      response.ok
+        ? "The payment server returned an empty response."
+        : "The payment server is unavailable. Start it with `npm run payment-server` and try again."
+    );
+  }
 
-/* ================= MAIN COMPONENT ================= */
+  try {
+    return JSON.parse(body);
+  } catch {
+    throw new Error("The payment server returned an invalid response. Please try again.");
+  }
+}
+
 export default function Donation() {
-  const [selectedCategory, setSelectedCategory] = useState(null)
-  const [amount, setAmount] = useState(0)
+  const [form, setForm] = useState(initialForm);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [payment, setPayment] = useState(null);
+  const [paymentToken, setPaymentToken] = useState("");
 
-  return (
-    <div className="p-6 md:p-10 max-w-6xl mx-auto">
+  useEffect(() => {
+    const search = new URLSearchParams(window.location.search);
+    const token = search.get("payment_token");
+    if (token) {
+      setPaymentToken(token);
+      fetch(`/api/payment/status?token=${encodeURIComponent(token)}`)
+        .then(async (response) => {
+          const data = await readApiResponse(response);
+          if (!response.ok) throw new Error(data.error || "Unable to verify payment.");
+          setPayment(data);
+        })
+        .catch((requestError) => setError(requestError.message));
+      return;
+    }
 
-      <h1 className="text-3xl md:text-4xl font-bold mb-10 text-center">
-        🙏 Donate for IYF Mayapur
-      </h1>
+    const referenceId = search.get("reference_id");
+    if (!referenceId) return;
+    fetch(`/api/payment/status/${encodeURIComponent(referenceId)}`)
+      .then(async (response) => {
+        const data = await readApiResponse(response);
+        if (!response.ok) throw new Error(data.error || "Unable to verify payment.");
+        setPayment(data);
+      })
+      .catch((requestError) => setError(requestError.message));
+  }, []);
 
-      {/* ================= SCHEME ================= */}
-      <h2 className="text-2xl font-semibold mb-6 text-center">
-        🌸 Donation Scheme
-      </h2>
+  const updateField = (event) => {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+  };
 
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
-        {schemes.map((scheme, index) => (
-          <div
-            key={index}
-            className="rounded-2xl overflow-hidden shadow-lg bg-white/70 backdrop-blur-md border border-gray-200 hover:scale-105 transition"
+  const beginPayment = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("/api/payment/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await readApiResponse(response);
+      if (!response.ok) throw new Error(data.error || "Unable to start payment.");
+      if (!data.payment_url) throw new Error("The payment server did not return a checkout URL.");
+      window.location.assign(data.payment_url);
+    } catch (requestError) {
+      setError(requestError.message);
+      setLoading(false);
+    }
+  };
+
+  if (payment?.status === "success") {
+    return (
+      <div className="donation-result-page">
+        <section className="donation-result-card">
+          <FiCheckCircle className="donation-result-card__icon" aria-hidden="true" />
+          <p className="donation-kicker">Payment successful</p>
+          <h1>{payment.first_name ? `Thank you, ${payment.first_name}.` : "Thank you for your offering."}</h1>
+          <p>Your contribution helps us serve and inspire the youth community of Sridham Mayapur.</p>
+          <div className="donation-receipt-summary">
+            <span>Donation amount <strong>₹{Number(payment.amount).toLocaleString("en-IN")}</strong></span>
+            <span>Reference <strong>{payment.reference_id}</strong></span>
+          </div>
+          <a
+            className="donation-primary-button"
+            href={paymentToken
+              ? `/api/payment/receipt?token=${encodeURIComponent(paymentToken)}`
+              : `/api/payment/receipt/${encodeURIComponent(payment.reference_id)}`}
           >
-            <img
-              src={scheme.image}
-              alt={scheme.title}
-              className="h-40 w-full object-cover"
-            />
-
-            <div className="p-4 text-center">
-              <h3 className="text-xl font-bold">{scheme.title}</h3>
-              <p className="text-green-600 font-semibold mt-1">
-                {scheme.amount}
-              </p>
-            </div>
-          </div>
-        ))}
+            <FiDownload aria-hidden="true" /> Download PDF receipt
+          </a>
+        </section>
       </div>
+    );
+  }
 
-      {/* ================= CATEGORY ================= */}
-      <h2 className="text-2xl font-semibold mb-6 text-center">
-        🎯 Choose Seva
-      </h2>
-
-      <div className="grid md:grid-cols-3 gap-6">
-        {categories.map((cat) => (
-          <div
-            key={cat.id}
-            onClick={() => setSelectedCategory(cat)}
-            className={`cursor-pointer border rounded-2xl overflow-hidden shadow-md transition 
-              ${selectedCategory?.id === cat.id ? "border-green-600 scale-105" : "hover:scale-105"}
-            `}
-          >
-            <img
-              src={cat.image}
-              alt={cat.title}
-              className="h-48 w-full object-cover"
-            />
-
-            <div className="p-4">
-              <h2 className="text-xl font-semibold">{cat.title}</h2>
-              <p className="text-gray-500 text-sm">{cat.desc}</p>
-            </div>
-          </div>
-        ))}
+  if (payment && payment.status !== "success") {
+    return (
+      <div className="donation-result-page">
+        <section className="donation-result-card">
+          <p className="donation-kicker">Payment not completed</p>
+          <h1>We could not confirm your donation.</h1>
+          <p>No receipt has been issued. Please retry, or contact IYF Mayapur with reference <strong>{payment.reference_id}</strong>.</p>
+          <a className="donation-primary-button" href="/donation">Try again</a>
+        </section>
       </div>
-
-      {/* ================= DONATION ================= */}
-      {selectedCategory && (
-        <div className="mt-10 bg-white shadow-xl rounded-2xl p-6 border">
-
-          <h2 className="text-2xl font-bold mb-4">
-            Donate for {selectedCategory.title}
-          </h2>
-
-          <div className="flex flex-wrap gap-3 mb-4">
-            {[101, 501, 1100, 2100].map((amt) => (
-              <button
-                key={amt}
-                onClick={() => setAmount(amt)}
-                className={`px-4 py-2 rounded-lg border 
-                  ${amount === amt ? "bg-green-600 text-white" : "bg-gray-100"}
-                `}
-              >
-                ₹{amt}
-              </button>
-            ))}
-          </div>
-
-          <input
-            type="number"
-            placeholder="Enter custom amount"
-            className="w-full border p-3 rounded-lg mb-4"
-            onChange={(e) => setAmount(Number(e.target.value))}
-          />
-
-          <RazorApp amount={amount} category={selectedCategory.title} />
-        </div>
-      )}
-    </div>
-  )
-}
-
-/* ================= RAZORPAY ================= */
-
-function loadScript(src) {
-  return new Promise((resolve) => {
-    const script = document.createElement("script")
-    script.src = src
-    script.onload = () => resolve(true)
-    script.onerror = () => resolve(false)
-    document.body.appendChild(script)
-  })
-}
-
-function RazorApp({ amount, category }) {
-  async function displayRazorpay() {
-    if (amount <= 0) {
-      alert("Please select donation amount")
-      return
-    }
-
-    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js")
-
-    if (!res) {
-      alert("Payment failed to load!")
-      return
-    }
-
-    const data = await fetch("http://localhost:1769/razorpay", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount }),
-    }).then((t) => t.json())
-
-    const options = {
-      key: "YOUR_KEY_ID",
-      amount: data.amount,
-      currency: "INR",
-      name: "IYF Mayapur",
-      description: category,
-      order_id: data.id,
-      callback_url: "http://localhost:1769/verify",
-      theme: { color: "#16a34a" },
-    }
-
-    const paymentObject = new window.Razorpay(options)
-    paymentObject.open()
+    );
   }
 
   return (
-    <button
-      onClick={displayRazorpay}
-      className="w-full bg-green-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-green-700 transition"
-    >
-      Donate ₹{amount || 0}
-    </button>
-  )
+    <div className="donation-page">
+      <header className="donation-hero">
+        <div className="donation-shell">
+          <p className="donation-kicker">One-time contribution</p>
+          <h1>Give with devotion.<br />Create lasting impact.</h1>
+          <p>Support IYF Mayapur’s spiritual education, youth outreach and community service.</p>
+        </div>
+      </header>
+
+      <main className="donation-layout donation-shell">
+        <aside className="donation-story">
+          <div className="donation-story__image"><img src="/donation/Chaitanya-Mahaprabhu.webp" alt="Chaitanya Mahaprabhu" /></div>
+          <FiHeart aria-hidden="true" />
+          <h2>Your offering makes service possible.</h2>
+          <p>Every donation is securely processed by the ISKCON Mayapur Treasury payment gateway.</p>
+          <span><FiLock aria-hidden="true" /> Secure one-time payment</span>
+        </aside>
+
+        <form className="donation-form" onSubmit={beginPayment}>
+          <div className="donation-form__heading">
+            <span>1</span><div><p>Your offering</p><h2>Choose an amount</h2></div>
+          </div>
+          <div className="donation-amounts">
+            {amountOptions.map((amount) => (
+              <button type="button" className={Number(form.amount) === amount ? "is-selected" : ""} onClick={() => setForm((current) => ({ ...current, amount: String(amount) }))} key={amount}>₹{amount.toLocaleString("en-IN")}</button>
+            ))}
+          </div>
+          <label className="donation-field donation-field--full"><span>Custom amount (₹) *</span><input required min="1" step="1" type="number" name="amount" value={form.amount} onChange={updateField} placeholder="Enter amount" /></label>
+
+          <div className="donation-form__heading donation-form__heading--spaced">
+            <span>2</span><div><p>Donor details</p><h2>Tell us about yourself</h2></div>
+          </div>
+          <div className="donation-fields">
+            <label className="donation-field"><span>First name *</span><input required name="first_name" value={form.first_name} onChange={updateField} /></label>
+            <label className="donation-field"><span>Middle name</span><input name="middle_name" value={form.middle_name} onChange={updateField} /></label>
+            <label className="donation-field"><span>Last name *</span><input required name="last_name" value={form.last_name} onChange={updateField} /></label>
+            <label className="donation-field"><span>Email *</span><input required type="email" name="email" value={form.email} onChange={updateField} /></label>
+            <label className="donation-field"><span>Mobile *</span><input required inputMode="numeric" name="mobile" value={form.mobile} onChange={updateField} /></label>
+            <label className="donation-field"><span>PAN card (required for 80G)</span><input name="pan_card" value={form.pan_card} onChange={updateField} /></label>
+            <label className="donation-field donation-field--full"><span>Address line 1 *</span><input required name="address_1" value={form.address_1} onChange={updateField} /></label>
+            <label className="donation-field donation-field--full"><span>Address line 2</span><input name="address_2" value={form.address_2} onChange={updateField} /></label>
+            <label className="donation-field"><span>PIN / postal code *</span><input required name="pin_code" value={form.pin_code} onChange={updateField} /></label>
+            <label className="donation-field"><span>District *</span><input required name="district" value={form.district} onChange={updateField} /></label>
+            <label className="donation-field"><span>City *</span><input required name="city" value={form.city} onChange={updateField} /></label>
+            <label className="donation-field"><span>State *</span><input required name="state" value={form.state} onChange={updateField} /></label>
+            <label className="donation-field donation-field--full"><span>Country *</span><input required name="country" value={form.country} onChange={updateField} /></label>
+          </div>
+          {error && <p className="donation-error" role="alert">{error}</p>}
+          <button className="donation-primary-button" type="submit" disabled={loading}>
+            <FiLock aria-hidden="true" /> {loading ? "Connecting securely…" : `Proceed to pay ₹${Number(form.amount || 0).toLocaleString("en-IN")}`}
+          </button>
+          <p className="donation-form__note">You’ll continue to Mayapur Treasury’s secure payment page. This is a one-time donation and will not recur.</p>
+        </form>
+      </main>
+    </div>
+  );
 }

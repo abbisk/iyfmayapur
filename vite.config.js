@@ -7,4 +7,9 @@ export default defineConfig({
   plugins: [react(),
   tailwindcss()
   ],
+  server: {
+    proxy: {
+      '/api/payment': 'http://localhost:1769',
+    },
+  },
 })

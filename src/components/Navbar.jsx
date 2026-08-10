@@ -9,6 +9,7 @@ export default function Navbar() {
     { name: 'Home', path: '/' },
     { name: 'Events', path: '/events' },
     { name: 'Courses', path: '/courses' },
+    { name: 'Gallery', path: '/gallery' },
     { name: 'Store', path: '/store' },
     { name: 'Donation', path: '/donation' },
     { name: 'Srila Prabhupada', path: '/sp' },

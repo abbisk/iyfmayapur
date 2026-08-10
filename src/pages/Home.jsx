@@ -1,6 +1,16 @@
-import { useEffect, useState } from "react";
-import { FiChevronDown, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { createElement, useEffect, useState } from "react";
+import {
+  FiArrowUpRight,
+  FiBookOpen,
+  FiCalendar,
+  FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
+  FiHeart,
+  FiUsers,
+} from "react-icons/fi";
 import Masonry from "react-masonry-css";
+import { Link } from "react-router-dom";
 import Prabhupada from "../assets/January_20.jpg";
 
 const lifeImages = [
@@ -17,6 +27,19 @@ const lifeImages = [
   "img9.jpg",
   "img10.jpg",
 ].map((img) => `/life/${img}`);
+
+const homepageGalleryPreview = lifeImages.slice(0, 3);
+
+const getDailyQuote = () => {
+  const today = new Date();
+  const month = today.toLocaleString("en-US", { month: "long" });
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return {
+    label: `${month} ${today.getDate()}`,
+    url: `https://raw.githubusercontent.com/Namit210/q/main/output/${month}_${day}.jpg`,
+  };
+};
 
 const carouselImages = [
   "/home/youth1.jpeg",
@@ -37,10 +60,42 @@ const carouselImages = [
   "/home/youth17.jpeg",
 ];
 
+const pathways = [
+  {
+    icon: FiBookOpen,
+    eyebrow: "Learn",
+    title: "Wisdom for everyday life",
+    description:
+      "Explore practical courses rooted in the Bhagavad Gita and timeless Vedic wisdom.",
+    link: "/courses",
+    label: "Explore courses",
+  },
+  {
+    icon: FiCalendar,
+    eyebrow: "Connect",
+    title: "Gather, celebrate, grow",
+    description:
+      "Meet a vibrant youth community through retreats, festivals and weekly gatherings.",
+    link: "/events",
+    label: "View events",
+  },
+  {
+    icon: FiHeart,
+    eyebrow: "Contribute",
+    title: "Make your time meaningful",
+    description:
+      "Use your energy and talents in service while building friendships that last.",
+    link: "/seva",
+    label: "Discover seva",
+  },
+];
+
 export default function Home() {
+  const dailyQuote = getDailyQuote();
   const [isOpen, setIsOpen] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [quoteImage, setQuoteImage] = useState(dailyQuote.url);
 
   useEffect(() => {
     if (isPaused) return undefined;
@@ -86,6 +141,23 @@ export default function Home() {
 
         <div className="home-hero__shade" />
 
+        <div className="home-hero__content home-shell">
+          <p className="home-hero__eyebrow">ISKCON Youth Forum · Sridham Mayapur</p>
+          <h1>Find your purpose.<br />Live with wisdom.</h1>
+          <p className="home-hero__lead">
+            A joyful community helping young people discover clarity, character
+            and a deeper connection through timeless spiritual wisdom.
+          </p>
+          <div className="home-hero__actions">
+            <Link to="/courses" className="home-button home-button--gold">
+              Begin your journey <FiArrowUpRight aria-hidden="true" />
+            </Link>
+            <Link to="/events" className="home-button home-button--glass">
+              Upcoming events
+            </Link>
+          </div>
+        </div>
+
         <button
           type="button"
           onClick={showPrevious}
@@ -118,6 +190,12 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="home-highlights home-shell" aria-label="IYF highlights">
+        <div><strong>15+</strong><span>Transformative courses</span></div>
+        <div><strong>500+</strong><span>Young lives inspired</span></div>
+        <div><FiUsers aria-hidden="true" /><span>A welcoming community</span></div>
+      </div>
+
       <div>
         <section className="home-intro home-shell">
           <div className="home-intro__content">
@@ -142,10 +220,13 @@ export default function Home() {
             >
               <div>
                 <p>
-                  The ISKCON Youth Forum(IYF) is a global initiative focused on
+                  The ISKCON Youth Forum (IYF) is a global initiative focused on
                   engaging and empowering young people through spiritual and
                   personal development.
                 </p>
+                <Link to="/sp" className="home-text-link">
+                  Our inspiration <FiArrowUpRight aria-hidden="true" />
+                </Link>
               </div>
             </div>
           </div>
@@ -158,6 +239,26 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="home-pathways home-shell">
+          <div className="home-pathways__heading">
+            <p>There is a place for you here</p>
+            <h2>Grow in every dimension of life.</h2>
+          </div>
+          <div className="home-pathways__grid">
+            {pathways.map(({ icon, eyebrow, title, description, link, label }) => (
+              <article className="home-pathway-card" key={title}>
+                <div className="home-pathway-card__icon">
+                  {createElement(icon, { "aria-hidden": true })}
+                </div>
+                <p>{eyebrow}</p>
+                <h3>{title}</h3>
+                <span>{description}</span>
+                <Link to={link}>{label} <FiArrowUpRight aria-hidden="true" /></Link>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="home-quote-wrap">
           <div className="home-quote home-shell">
             <div className="home-quote__heading">
@@ -166,7 +267,11 @@ export default function Home() {
               <span className="home-title-rule" />
             </div>
             <div className="home-quote__image-wrap">
-              <img src={Prabhupada} alt="Prabhupada daily quote" />
+              <img
+                src={quoteImage}
+                alt={`Srila Prabhupada daily quote for ${dailyQuote.label}`}
+                onError={() => setQuoteImage(Prabhupada)}
+              />
             </div>
           </div>
         </section>
@@ -182,7 +287,7 @@ export default function Home() {
             className="home-masonry"
             columnClassName="home-masonry__column"
           >
-            {lifeImages.map((src, index) => (
+            {homepageGalleryPreview.map((src, index) => (
               <figure className="home-gallery__item" key={src}>
                 <img
                   src={src}
@@ -192,6 +297,21 @@ export default function Home() {
               </figure>
             ))}
           </Masonry>
+          <div className="home-gallery__action">
+            <Link to="/gallery" className="home-button home-button--dark">
+              Explore the gallery <FiArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
+
+        <section className="home-cta">
+          <div className="home-cta__content home-shell">
+            <p>Your journey can begin today.</p>
+            <h2>Come as you are.<br />Grow into who you can be.</h2>
+            <Link to="/events" className="home-button home-button--gold">
+              Meet the community <FiArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
         </section>
       </div>
     </div>
