@@ -8,7 +8,7 @@ export const events = [
     location: 'Sri Jagannath Puri Dham',
     duration: '3-day camp',
     contribution: 'INR 3,000',
-    registrationDeadline: '15th August, 2026',
+    registrationDeadline: '16th October, 2026',
     registrationUrl: 'https://forms.gle/QrUbeqGZJePr3SZR6',
     registrationForm: {
       url: 'https://docs.google.com/forms/d/e/1FAIpQLSfEOZLmBt0DYKxdLKYOxTkCwIa3qUF1jc_b8cwtRXpSq5Kz5g/viewform',
