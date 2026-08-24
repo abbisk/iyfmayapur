@@ -50,7 +50,8 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full h-16 z-50 px-3 sm:px-7 flex items-center justify-between transition-all duration-300 ${navStyle}`}
+      style={{ top: 'var(--camp-banner-height, 0px)' }}
+      className={`fixed left-0 w-full h-16 z-50 px-3 sm:px-7 flex items-center justify-between transition-all duration-300 ${navStyle}`}
     >
       {/* Logo */}
       <h1
@@ -66,17 +67,20 @@ export default function Navbar() {
 
       {/* Hamburger */}
       <button
-        className="sm:hidden flex flex-col justify-center items-center h-10 w-10 focus:outline-none"
+        type="button"
+        aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={menuOpen}
+        className="camp-mobile-menu-button sm:hidden flex h-8 w-8 flex-col items-center justify-center rounded-full border focus:outline-none"
         onClick={() => setMenuOpen((open) => !open)}
       >
         <span
-          className={`block w-7 h-0.5 mb-1.5 transition-all duration-300 ${textColor} ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
+          className={`block w-5 h-0.5 mb-1 transition-all duration-300 ${textColor} ${menuOpen ? 'rotate-45 translate-y-1.5' : ''}`}
         ></span>
         <span
-          className={`block w-7 h-0.5 mb-1.5 transition-all duration-300 ${textColor} ${menuOpen ? 'opacity-0' : ''}`}
+          className={`block w-5 h-0.5 mb-1 transition-all duration-300 ${textColor} ${menuOpen ? 'opacity-0' : ''}`}
         ></span>
         <span
-          className={`block w-7 h-0.5 transition-all duration-300 ${textColor} ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
+          className={`block w-5 h-0.5 transition-all duration-300 ${textColor} ${menuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}
         ></span>
       </button>
 
@@ -101,7 +105,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`sm:hidden fixed top-16 left-0 w-full h-[calc(100vh-4rem)] backdrop-blur-xl flex flex-col items-center justify-center transition-all duration-300 ${
+        className={`sm:hidden absolute top-16 left-0 w-full h-[calc(100vh-4rem)] backdrop-blur-xl flex flex-col items-center justify-center transition-all duration-300 ${
           menuOpen
             ? 'opacity-100 pointer-events-auto bg-black/40'
             : 'opacity-0 pointer-events-none'

@@ -62,6 +62,8 @@ export default function EventDetails() {
             <Info icon={<FiCalendar />} label="Date" value={event.date} />
             <Info icon={<FiMapPin />} label="Venue" value={event.location} />
             <Info icon={<FiClock />} label="Duration" value={event.duration} />
+            {event.contribution && <Info icon={<FiUsers />} label="Contribution" value={event.contribution} />}
+            {event.registrationDeadline && <Info icon={<FiCalendar />} label="Register by" value={event.registrationDeadline} />}
           </div>
 
           <div className="mt-10">
@@ -97,6 +99,16 @@ export default function EventDetails() {
             </div>
           ) : (
             <>
+              {event.registrationUrl && (
+                <a
+                  href={event.registrationUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mb-6 flex w-full items-center justify-center rounded-xl bg-[#276244] px-5 py-3.5 text-center font-extrabold text-white shadow-lg shadow-[#276244]/15 transition hover:bg-[#1d5037] focus:outline-none focus:ring-4 focus:ring-[#276244]/20"
+                >
+                  Register for the camp
+                </a>
+              )}
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#b66d24]">{activeGoogleForm.eyebrow || 'Reserve your place'}</p>
               <h2 className="mt-2 text-2xl font-black">{activeGoogleForm.title || 'Register your interest'}</h2>
               <p className="mt-2 text-sm leading-6 text-stone-500">{activeGoogleForm.description || 'Fill in your details to register for this event.'}</p>
