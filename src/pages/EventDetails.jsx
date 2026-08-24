@@ -17,6 +17,7 @@ export default function EventDetails() {
   if (!event) return <Navigate to="/events" replace />
 
   const activeGoogleForm = event.registrationForm
+  const showCampPosterInsteadOfForm = event.slug === 'alumni-camp-jagannath-puri-2026'
   const isGoogleFormConfigured = Boolean(
     activeGoogleForm?.url &&
     activeGoogleForm.fields?.length &&
@@ -113,25 +114,36 @@ export default function EventDetails() {
               <h2 className="mt-2 text-2xl font-black">{activeGoogleForm.title || 'Register your interest'}</h2>
               <p className="mt-2 text-sm leading-6 text-stone-500">{activeGoogleForm.description || 'Fill in your details to register for this event.'}</p>
 
-              <form
-                ref={formRef}
-                className="mt-6 space-y-4"
-                action={getResponseUrl(activeGoogleForm.url)}
-                method="POST"
-                target="google-form-response"
-                onSubmit={handleSubmit}
-              >
-                {activeGoogleForm.fields.map((field) => <FormField key={field.entry} field={field} />)}
+              {showCampPosterInsteadOfForm ? (
+                <div className="mt-6 overflow-hidden rounded-2xl border border-[#e9dfcd] bg-[#fffcf7]">
+                  <img
+                    src="/puriCamp.jpeg"
+                    alt="Jagannath Puri camp registration details"
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <form
+                  ref={formRef}
+                  className="mt-6 space-y-4"
+                  action={getResponseUrl(activeGoogleForm.url)}
+                  method="POST"
+                  target="google-form-response"
+                  onSubmit={handleSubmit}
+                >
+                  {activeGoogleForm.fields.map((field) => <FormField key={field.entry} field={field} />)}
 
-                {configurationError && (
-                  <p className="rounded-xl bg-red-50 p-3 text-sm leading-5 text-red-700" role="alert">This event’s Google Form configuration is incomplete. Check its URL and field IDs in <code>events.js</code>.</p>
-                )}
+                  {configurationError && (
+                    <p className="rounded-xl bg-red-50 p-3 text-sm leading-5 text-red-700" role="alert">This event’s Google Form configuration is incomplete. Check its URL and field IDs in <code>events.js</code>.</p>
+                  )}
 
-                <button disabled={status === 'submitting'} className="w-full rounded-xl bg-[#276244] px-5 py-3.5 font-extrabold text-white shadow-lg shadow-[#276244]/15 transition hover:bg-[#1d5037] disabled:cursor-wait disabled:opacity-70">
-                  {status === 'submitting' ? 'Sending response…' : activeGoogleForm.submitLabel || 'Register for this event'}
-                </button>
-                <p className="text-center text-xs leading-5 text-stone-400">Your response is securely submitted to our Google Form.</p>
-              </form>
+                  <button disabled={status === 'submitting'} className="w-full rounded-xl bg-[#276244] px-5 py-3.5 font-extrabold text-white shadow-lg shadow-[#276244]/15 transition hover:bg-[#1d5037] disabled:cursor-wait disabled:opacity-70">
+                    {status === 'submitting' ? 'Sending response…' : activeGoogleForm.submitLabel || 'Register for this event'}
+                  </button>
+                  <p className="text-center text-xs leading-5 text-stone-400">Your response is securely submitted to our Google Form.</p>
+                </form>
+              )}
             </>
           )}
         </aside>
