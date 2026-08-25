@@ -1,8 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
+import Prabhupada from './pages/Prabhupada/Prabhupada.jsx'
 import StudentCourses from './pages/StudentCourses.jsx'
 import Player from './pages/Player.jsx'
-import { Home, Sp, Events, Seva, Store, Courses, Donation } from './pages/index.jsx'
+import { Home, Events, Seva, Store, Courses, Donation } from './pages/index.jsx'
 import ViewCourse from './pages/ViewCourse.jsx'
 import PageNotFound from './pages/PageNotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
@@ -21,7 +22,7 @@ function App() {
       <main style={{ paddingTop: 'calc(4rem + var(--camp-banner-height, 0px))' }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/sp" element={<Sp />} />
+          <Route path="/prabhupada" element={<Prabhupada />} />
           <Route path="/events" element={<Events />} />
           <Route path="/events/:eventSlug" element={<EventDetails />} />
           <Route path="/seva" element={<Seva />} />

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+<<<<<<< HEAD
+=======
 .camp-banner {
   border-color: #e7c77f;
   background: #f7d77f;
@@ -76,6 +78,7 @@
   .camp-banner__timer { gap: 5px; }
   .camp-banner__content--minimized { grid-template-columns: minmax(0, 1fr) auto; }
 }
+>>>>>>> upstream/abbisk
 
 .home-page {
   overflow: hidden;
