@@ -52,7 +52,7 @@ const SpHero = () => {
       <div className="relative w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 pt-8 pb-28 sm:pb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[580px] lg:min-h-[640px]">
         <div className="lg:col-span-7 flex flex-col items-start gap-4 sm:gap-5 text-left z-10">
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
-            OUR FOUNDER-ĀCĀRYA
+           FOUNDER-ĀCĀRYA
           </span>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif leading-[1.12] tracking-tight">

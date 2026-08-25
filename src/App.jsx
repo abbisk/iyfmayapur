@@ -10,12 +10,16 @@ import Dashboard from './pages/Dashboard.jsx'
 import Footer from './components/Footer.jsx'
 import Gallery from "./pages/Gallery.jsx"
 import EventDetails from './pages/EventDetails.jsx'
+import Banner from './updates/Banner.jsx'
+
 
 function App() {
   return (
     <>
+      <Banner />
       <Navbar />
-      <main className="pt-16">
+
+      <main style={{ paddingTop: 'calc(4rem + var(--camp-banner-height, 0px))' }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/prabhupada" element={<Prabhupada />} />

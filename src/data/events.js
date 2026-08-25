@@ -1,12 +1,15 @@
 export const events = [
   {
     slug: 'alumni-camp-jagannath-puri-2026',
-    title: 'Alumni Camp 2026 — Jagannath Puri',
+    title: 'Alumni Camp 2026 - Jagannath Puri',
     category: 'Alumni Camp',
     image: '/home.jpg',
-    date: '2026 • Dates to be confirmed',
-    location: 'Jagannath Puri, Odisha',
-    duration: 'Multi-day camp',
+    date: '16th - 18th October, 2026',
+    location: 'Sri Jagannath Puri Dham',
+    duration: '3-day camp',
+    contribution: 'INR 3,000',
+    registrationDeadline: '16th October, 2026',
+    registrationUrl: 'https://forms.gle/QrUbeqGZJePr3SZR6',
     registrationForm: {
       url: 'https://docs.google.com/forms/d/e/1FAIpQLSfEOZLmBt0DYKxdLKYOxTkCwIa3qUF1jc_b8cwtRXpSq5Kz5g/viewform',
       eyebrow: 'Camp response',
@@ -20,9 +23,9 @@ export const events = [
         { label: 'Date', entry: 'entry.152846947', type: 'date', required: true },
       ],
     },
-    summary: 'Reconnect with the alumni community through harinam, spiritual association and a memorable camp in sacred Jagannath Puri.',
-    description: 'Created for our alumni community, this camp is an opportunity to reconnect, deepen our spiritual practice and experience the sacred atmosphere of Sri Purushottam Kshetra together.',
-    highlights: ['Harinam sankirtan and japa', 'Guided visits to sacred places', 'Alumni association and shared memories'],
+    summary: 'Reconnect with old friends, rejuvenate your Krishna consciousness and deepen your spiritual life in the association of devotees at Jagannath Puri Dham.',
+    description: 'By the mercy of Sri Sri Guru and Gauranga, IYF Mayapur invites all alumni to a special 3-day camp at the sacred abode of Lord Jagannath, Sri Purushottama Kshetra. Come together for spiritual association, heartfelt memories and joyful devotional experiences in the holy dham.',
+    highlights: ['Mahat sanga with HG Sarva Drik prabhuji', 'Holy dham parikrama', 'Soul-enriching kirtans', 'Bhagavad-gita and Srimad-Bhagavatam discussions', 'Heartfelt alumni association', 'Krishna prasadam, fun and devotional memories'],
   },
   {
     slug: 'anubhava-youth-festival',

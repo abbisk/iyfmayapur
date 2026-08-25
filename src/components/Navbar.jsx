@@ -82,13 +82,13 @@ export default function Navbar() {
         ))}
       </ul>
 
-       <NavLink
-      to="/join"
-      onClick={() => setMenuOpen(false)}
-      className="py-2 px-5 bg-[#1f5d42] hidden lg:block hover:bg-[#184a34] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
-    >
-      Join Us
-    </NavLink>
+      <NavLink
+        to="/join"
+        onClick={() => setMenuOpen(false)}
+        className="py-2 px-5 bg-[#1f5d42] hidden lg:block hover:bg-[#184a34] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
+      >
+        Join Us
+      </NavLink>
 
       {/* Mobile Hamburger Button */}
       <button
@@ -116,56 +116,56 @@ export default function Navbar() {
         </div>
       </button>
 
-     {/* Mobile Dropdown Menu */}
-<div
-  className={`sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
-    menuOpen
-      ? "opacity-100 translate-y-0 pointer-events-auto"
-      : "opacity-0 -translate-y-4 pointer-events-none"
-  }`}
->
-  <div className="flex flex-col px-6 py-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-    {/* Navigation Links */}
-    <ul className="flex flex-col space-y-1">
-      {MENU_ITEMS.map((item) => (
-        <li key={item.path}>
+      {/* Mobile Dropdown Menu */}
+      <div
+        className={`sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
+          menuOpen
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-4 pointer-events-none"
+        }`}
+      >
+        <div className="flex flex-col px-6 py-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          {/* Navigation Links */}
+          <ul className="flex flex-col space-y-1">
+            {MENU_ITEMS.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+                      isActive
+                        ? "bg-[#1f5d42]/10 text-[#1f5d42] font-semibold"
+                        : "text-gray-700 hover:bg-gray-100 hover:text-[#1f5d42]"
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span>{item.name}</span>
+                      {isActive && (
+                        <span className="text-amber-500 text-xs">✦</span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          {/* Subtle Divider */}
+          <div className="my-4 border-t border-gray-100" />
+
+          {/* Join Us Call-To-Action Button */}
           <NavLink
-            to={item.path}
+            to="/join"
             onClick={() => setMenuOpen(false)}
-            className={({ isActive }) =>
-              `flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-colors ${
-                isActive
-                  ? "bg-[#1f5d42]/10 text-[#1f5d42] font-semibold"
-                  : "text-gray-700 hover:bg-gray-100 hover:text-[#1f5d42]"
-              }`
-            }
+            className="w-full py-3 px-4 bg-[#1f5d42] hover:bg-[#184a34] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
           >
-            {({ isActive }) => (
-              <>
-                <span>{item.name}</span>
-                {isActive && (
-                  <span className="text-amber-500 text-xs">✦</span>
-                )}
-              </>
-            )}
+            Join Us
           </NavLink>
-        </li>
-      ))}
-    </ul>
-
-    {/* Subtle Divider */}
-    <div className="my-4 border-t border-gray-100" />
-
-    {/* Join Us Call-To-Action Button */}
-    <NavLink
-      to="/join"
-      onClick={() => setMenuOpen(false)}
-      className="w-full py-3 px-4 bg-[#1f5d42] hover:bg-[#184a34] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
-    >
-      Join Us
-    </NavLink>
-  </div>
-</div>
+        </div>
+      </div>
     </nav>
   );
 }

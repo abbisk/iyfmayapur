@@ -1,5 +1,84 @@
 @import "tailwindcss";
 
+<<<<<<< HEAD
+=======
+.camp-banner {
+  border-color: #e7c77f;
+  background: #f7d77f;
+  transition: background-color 400ms ease, border-color 400ms ease, box-shadow 400ms ease;
+}
+
+.camp-banner--scrolled {
+  border-color: #e7c77f;
+  color: #342313;
+  background: #f7d77f;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.camp-banner__shine {
+  position: absolute;
+  inset: 0 auto 0 -35%;
+  width: 25%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: skewX(-18deg);
+  animation: camp-banner-shine 5.5s ease-in-out infinite;
+}
+
+.camp-banner__cta { animation: camp-banner-cta 700ms cubic-bezier(.2, .8, .2, 1) both; }
+.camp-banner__title { animation: camp-banner-title-blink 2.4s ease-in-out infinite; }
+.camp-mobile-menu-button {
+  border-color: transparent;
+  color: #2d241d;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.camp-mobile-menu-button span { background-color: #2d241d; }
+.camp-mobile-menu-button:hover { background: transparent; }
+.camp-banner__content { grid-template-columns: minmax(0, 1fr) auto minmax(auto, 1fr); }
+.camp-banner__content > :last-child { justify-self: end; }
+.camp-banner__timer { color: #805019; font-variant-numeric: tabular-nums; }
+.camp-banner__timer span { display: inline-flex; align-items: baseline; gap: 3px; }
+.camp-banner__timer strong { font-size: 1.05rem; }
+.camp-banner__timer small { font-size: .62rem; font-weight: 800; text-transform: uppercase; }
+.camp-banner--scrolled .text-\[\#805019\] { color: #805019; }
+.camp-banner--scrolled .text-\[\#684b27\] { color: #684b27; }
+
+@keyframes camp-banner-shine {
+  0%, 45% { transform: translateX(0) skewX(-18deg); opacity: 0; }
+  58% { opacity: 1; }
+  75%, 100% { transform: translateX(560%) skewX(-18deg); opacity: 0; }
+}
+
+@keyframes camp-banner-cta {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes camp-banner-title-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .42; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .camp-banner,
+  .camp-banner__shine,
+  .camp-banner__cta,
+  .camp-banner__title { animation: none; transition: none; }
+}
+
+@media (max-width: 640px) {
+  .camp-banner__content { grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; }
+  .camp-banner__info { grid-column: 1; grid-row: 1; padding-right: 0; }
+  .camp-banner__actions { grid-column: 2; grid-row: 1; }
+  .camp-banner__timer { position: static; grid-column: 1 / -1; grid-row: 2; justify-self: center; transform: none; }
+  .camp-banner__timer strong { font-size: .82rem; }
+  .camp-banner__timer small { font-size: .5rem; }
+  .camp-banner__timer { gap: 5px; }
+  .camp-banner__content--minimized { grid-template-columns: minmax(0, 1fr) auto; }
+}
+>>>>>>> upstream/abbisk
 
 .home-page {
   overflow: hidden;
