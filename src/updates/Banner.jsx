@@ -61,7 +61,7 @@ export default function Banner() {
   }
 
   return (
-    <aside ref={bannerRef} onClick={toggleBanner} className={`camp-banner fixed inset-x-0 top-0 z-40 cursor-pointer overflow-hidden border-b text-[#342313] shadow-[0_8px_24px_rgba(79,50,11,0.12)] ${isScrolled ? 'camp-banner--scrolled' : ''} ${isMinimized ? 'camp-banner--minimized' : ''}`}>
+    <aside ref={bannerRef} onClick={toggleBanner} className={`camp-banner fixed inset-x-0 top-0 z-50 cursor-pointer overflow-hidden border-b text-[#342313] shadow-[0_8px_24px_rgba(79,50,11,0.12)] ${isScrolled ? 'camp-banner--scrolled' : ''} ${isMinimized ? 'camp-banner--minimized' : ''}`}>
       <span className="camp-banner__shine" aria-hidden="true" />
       <div className={`camp-banner__content relative mx-auto grid max-w-7xl items-center gap-4 px-4 py-3 sm:px-7 sm:py-2.5 ${isMinimized ? 'camp-banner__content--minimized' : ''}`}>
         <div className={`camp-banner__info min-w-0 ${isMinimized ? 'flex items-center gap-3' : ''}`}>

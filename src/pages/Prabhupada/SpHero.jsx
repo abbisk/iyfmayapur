@@ -78,8 +78,7 @@ const SpHero = () => {
             </span>
             <div>
               <p className="text-xs sm:text-sm italic text-stone-200 font-serif leading-relaxed">
-                Let people think that what I am doing is rascaldom, but I am
-                fully satisfied to deliver this message of Kṛṣṇa consciousness.
+                Everyone is independent to think or desire, but the fulfillment of one’s desire depends on the supreme will. This law is expressed as “Man proposes, God disposes.”
               </p>
               <span className="text-[11px] text-[#d4af37] block mt-1.5 font-medium tracking-wide">
                 — Śrīla Prabhupāda

@@ -26,7 +26,8 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full h-16 z-50 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+      style={{ top: 'var(--camp-banner-height, 0px)' }}
+      className={`fixed left-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
         isScrolled
           ? "bg-white/20 backdrop-blur-md shadow-sm "
           : "bg-transparent"
@@ -118,13 +119,17 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       <div
+        style={{ top: 'calc(var(--camp-banner-height, 0px) + 4rem)' }}
         className={`sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
           menuOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col px-6 py-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div
+          style={{ maxHeight: 'calc(100vh - (var(--camp-banner-height, 0px) + 4rem))' }}
+          className="flex flex-col px-6 py-6 overflow-y-auto"
+        >
           {/* Navigation Links */}
           <ul className="flex flex-col space-y-1">
             {MENU_ITEMS.map((item) => (
