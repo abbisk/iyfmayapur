@@ -10,9 +10,7 @@ const PrabhupadaBooks = () => {
       id="books"
       className="w-full py-12 px-4 sm:px-8 max-w-7xl mx-auto font-poppins flex flex-col gap-10"
     >
-      {/* 1. Main Books Showcase White Card */}
       <div className="w-full bg-[#fdfcf9] border border-stone-200/80 rounded-[28px] p-6 sm:p-10 lg:p-12 shadow-[0_4px_25px_rgba(0,0,0,0.03)] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Side: Typography & Button (5 cols) */}
         <div className="lg:col-span-5 flex flex-col items-start gap-4 text-left">
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.22em] text-[#c28422]">
             HIS SACRED LEGACY
@@ -66,7 +64,7 @@ const PrabhupadaBooks = () => {
 
           <div className="flex flex-col gap-1 text-right">
             <p className="text-sm sm:text-base lg:text-lg font-serif italic text-stone-100 leading-relaxed">
-             I will never die, I shall live for my books, and you will utilize
+              I will never die, I shall live for my books, and you will utilize
             </p>
             <span className="text-xs sm:text-sm text-[#d4af37] font-medium tracking-wide">
               — Śrīla Prabhupāda
