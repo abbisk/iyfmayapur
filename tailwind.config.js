@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        antonio: ['Antonio', 'sans-serif'],
+        poppins: ["Poppins", "sans-serif"],
+        antonio: ["Antonio", "sans-serif"],
       },
     },
   },

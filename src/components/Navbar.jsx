@@ -1,125 +1,175 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+
+const MENU_ITEMS = [
+  { name: "Home", path: "/" },
+  { name: "Events", path: "/events" },
+  { name: "Courses", path: "/courses" },
+  { name: "Gallery", path: "/gallery" },
+  { name: "Store", path: "/store" },
+  { name: "Donation", path: "/donation" },
+  { name: "Srila Prabhupada", path: "/prabhupada" },
+];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const menuItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Events', path: '/events' },
-    { name: 'Courses', path: '/courses' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'Store', path: '/store' },
-    { name: 'Donation', path: '/donation' },
-    { name: 'Srila Prabhupada', path: '/sp' },
-  ];
-
-  // Scroll percentage calculation
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollTop / docHeight;
-
-      setScrollProgress(progress);
+      setIsScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Dynamic styles
-  const textColor =
-    scrollProgress < 0.1
-      ? 'text-gray-700'
-      : scrollProgress < 0.3
-      ? 'text-black'
-      : 'text-gray-900';
-
-  const navStyle =
-    scrollProgress < 0.01
-      ? 'bg-transparent'
-      : 'bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.2)]';
-
-  const hoverStyle =
-    scrollProgress < 0.5
-      ? 'hover:text-blue-600'
-      : 'hover:text-blue-300 hover:drop-shadow-[0_0_6px_rgba(147,197,253,0.8)]';
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full h-16 z-50 px-3 sm:px-7 flex items-center justify-between transition-all duration-300 ${navStyle}`}
+      style={{ top: 'var(--camp-banner-height, 0px)' }}
+      className={`fixed left-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/20 backdrop-blur-md shadow-sm "
+          : "bg-transparent"
+      }`}
     >
-      {/* Logo */}
-      <h1
-        className={`text-lg xs:text-xl sm:text-2xl font-bold flex items-center space-x-2 sm:space-x-3 transition-colors duration-300 ${textColor}`}
-      >
+      {/* Brand / Logo */}
+      <NavLink to="/" className="flex items-center gap-3 py-4">
         <img
           src="/logo.png"
-          alt="logo"
-          className="h-8 w-12 sm:h-10 sm:w-16 object-contain px-1 sm:px-2"
+          alt="IYF Mayapur Logo"
+          className="h-12 w-auto object-contain"
         />
-        <span>IYF Sridham Mayapur</span>
-      </h1>
+        <div className="flex flex-col leading-tight font-semibold">
+          <span className="text-xl font-bold text-[#1f5d42]">IYF</span>
+          <span className="text-lg font-semibold text-[#1f5d42] font-serif">
+            Sridham Mayapur
+          </span>
+        </div>
+      </NavLink>
 
-      {/* Hamburger */}
-      <button
-        className="sm:hidden flex flex-col justify-center items-center h-10 w-10 focus:outline-none"
-        onClick={() => setMenuOpen((open) => !open)}
-      >
-        <span
-          className={`block w-7 h-0.5 mb-1.5 transition-all duration-300 ${textColor} ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
-        ></span>
-        <span
-          className={`block w-7 h-0.5 mb-1.5 transition-all duration-300 ${textColor} ${menuOpen ? 'opacity-0' : ''}`}
-        ></span>
-        <span
-          className={`block w-7 h-0.5 transition-all duration-300 ${textColor} ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
-        ></span>
-      </button>
-
-      {/* Desktop Menu */}
-      <ul
-        className={`hidden sm:flex items-end space-x-4 md:space-x-6 group transition-colors duration-300 ${textColor}`}
-      >
-        {menuItems.map((item, index) => (
-          <li
-            key={index}
-            className="transform transition-all duration-300 group-hover:scale-95 hover:!scale-110 hover:-translate-y-1"
-          >
-            <Link
+      {/* Desktop Navigation */}
+      <ul className="hidden sm:flex items-center gap-8">
+        {MENU_ITEMS.map((item) => (
+          <li key={item.path}>
+            <NavLink
               to={item.path}
-              className={`block px-3 py-2 font-semibold transition-all duration-300 ${hoverStyle}`}
+              className={({ isActive }) =>
+                `relative py-4 text-base font-medium transition-colors duration-200 block ${
+                  isActive
+                    ? "text-[#1f5d42] font-semibold"
+                    : "text-gray-800 hover:text-[#1f5d42]"
+                }`
+              }
             >
-              {item.name}
-            </Link>
+              {({ isActive }) => (
+                <>
+                  {item.name}
+
+                  {/* Active Page Indicator */}
+                  {isActive && (
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none">
+                      <div className="h-[1px] w-5 bg-gradient-to-r from-transparent to-amber-500" />
+                      <span className="text-amber-500 text-[10px] animate-pulse">
+                        ✦
+                      </span>
+                      <div className="h-[1px] w-5 bg-gradient-to-l from-transparent to-amber-500" />
+                    </div>
+                  )}
+                </>
+              )}
+            </NavLink>
           </li>
         ))}
       </ul>
 
-      {/* Mobile Menu */}
+      <NavLink
+        to="/join"
+        onClick={() => setMenuOpen(false)}
+        className="py-2 px-5 bg-[#1f5d42] hidden lg:block hover:bg-[#184a34] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
+      >
+        Join Us
+      </NavLink>
+
+      {/* Mobile Hamburger Button */}
+      <button
+        type="button"
+        aria-label="Toggle Navigation Menu"
+        onClick={() => setMenuOpen((prev) => !prev)}
+        className="sm:hidden p-2 text-gray-800 focus:outline-none"
+      >
+        <div className="w-6 h-5 flex flex-col justify-between">
+          <span
+            className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${
+              menuOpen ? "rotate-45 translate-y-2" : ""
+            }`}
+          />
+          <span
+            className={`h-0.5 w-full bg-current rounded transition-opacity duration-300 ${
+              menuOpen ? "opacity-0" : ""
+            }`}
+          />
+          <span
+            className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${
+              menuOpen ? "-rotate-45 -translate-y-2" : ""
+            }`}
+          />
+        </div>
+      </button>
+
+      {/* Mobile Dropdown Menu */}
       <div
-        className={`sm:hidden fixed top-16 left-0 w-full h-[calc(100vh-4rem)] backdrop-blur-xl flex flex-col items-center justify-center transition-all duration-300 ${
+        style={{ top: 'calc(var(--camp-banner-height, 0px) + 4rem)' }}
+        className={`sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
           menuOpen
-            ? 'opacity-100 pointer-events-auto bg-black/40'
-            : 'opacity-0 pointer-events-none'
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
-        <ul className="flex flex-col space-y-8 text-2xl font-bold text-white">
-          {menuItems.map((item, index) => (
-            <li key={index}>
-              <Link
-                to={item.path}
-                className="hover:text-blue-300 transition-colors"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div
+          style={{ maxHeight: 'calc(100vh - (var(--camp-banner-height, 0px) + 4rem))' }}
+          className="flex flex-col px-6 py-6 overflow-y-auto"
+        >
+          {/* Navigation Links */}
+          <ul className="flex flex-col space-y-1">
+            {MENU_ITEMS.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+                      isActive
+                        ? "bg-[#1f5d42]/10 text-[#1f5d42] font-semibold"
+                        : "text-gray-700 hover:bg-gray-100 hover:text-[#1f5d42]"
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span>{item.name}</span>
+                      {isActive && (
+                        <span className="text-amber-500 text-xs">✦</span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          {/* Subtle Divider */}
+          <div className="my-4 border-t border-gray-100" />
+
+          {/* Join Us Call-To-Action Button */}
+          <NavLink
+            to="/join"
+            onClick={() => setMenuOpen(false)}
+            className="w-full py-3 px-4 bg-[#1f5d42] hover:bg-[#184a34] text-white text-center font-semibold rounded-xl shadow-md active:scale-98 transition-all duration-200"
+          >
+            Join Us
+          </NavLink>
+        </div>
       </div>
     </nav>
   );
