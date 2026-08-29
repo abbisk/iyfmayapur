@@ -4,7 +4,7 @@ export const events = [
     title: 'Alumni Camp 2026 - Jagannath Puri',
     category: 'Alumni Camp',
     image: '/home.jpg',
-    date: '16th - 18th October, 2026',
+    date: '18th - 20th October, 2026',
     location: 'Sri Jagannath Puri Dham',
     duration: '3-day camp',
     contribution: 'INR 3,000',
