@@ -1,4 +1,5 @@
 import { CourseCard } from "../components/Card"
+import AnimatedCard from '../components/AnimatedCard.jsx'
 import bgimage from '../assets/sample.jpg'
 import gita from '../assets/gita.png'
 import mantra from '../assets/mantra.jpeg'
@@ -90,12 +91,18 @@ export default function StudentCourses() {
             </div> */}
             
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '2rem' }}>
-                    <CourseCard imageUrl={gita} title='Introduction to Bhagavad Gita' subtitle='Explore the timeless wisdom of the Bhagavad Gita and its practical application' level='Beginner' courseId='course123' />
-                    <CourseCard imageUrl={mantra} title='Meditation for Inner Peace' subtitle='Learn simple yet profound meditation technique to calm the mind and connect with your inner self.' level='All levels' courseId='course124' />
-                    <CourseCard imageUrl={kirtan} title='The Art of Kirtan' subtitle='Discover the power of mantra meditation through call-and-response chanting with musical instruments.' level='Beginner' courseId='course125' />
-                    <CourseCard imageUrl={gita} title='Introduction to Bhagavad Gita' subtitle='Explore the timeless wisdom of the Bhagavad Gita and its practical application' level='Beginner' courseId='course123' />
-                    <CourseCard imageUrl={mantra} title='Meditation for Inner Peace' subtitle='Learn simple yet profound meditation technique to calm the mind and connect with your inner self.' level='All levels' courseId='course124' />
-                    <CourseCard imageUrl={kirtan} title='The Art of Kirtan' subtitle='Discover the power of mantra meditation through call-and-response chanting with musical instruments.' level='Beginner' courseId='course125' />
+                    {[
+                        { imageUrl: gita, title: 'Introduction to Bhagavad Gita', subtitle: 'Explore the timeless wisdom...', level: 'Beginner', courseId: 'course123' },
+                        { imageUrl: mantra, title: 'Meditation for Inner Peace', subtitle: 'Learn simple yet profound...', level: 'All levels', courseId: 'course124' },
+                        { imageUrl: kirtan, title: 'The Art of Kirtan', subtitle: 'Discover the power of mantra meditation...', level: 'Beginner', courseId: 'course125' },
+                        { imageUrl: gita, title: 'Introduction to Bhagavad Gita', subtitle: 'Explore the timeless wisdom...', level: 'Beginner', courseId: 'course123' },
+                        { imageUrl: mantra, title: 'Meditation for Inner Peace', subtitle: 'Learn simple yet profound...', level: 'All levels', courseId: 'course124' },
+                        { imageUrl: kirtan, title: 'The Art of Kirtan', subtitle: 'Discover the power of mantra meditation...', level: 'Beginner', courseId: 'course125' }
+                    ].map((course, index) => (
+                        <AnimatedCard key={`${course.title}-${index}`} variantIndex={index} className="inline-block">
+                            <CourseCard imageUrl={course.imageUrl} title={course.title} subtitle={course.subtitle} level={course.level} courseId={course.courseId} />
+                        </AnimatedCard>
+                    ))}
                 </div>
 
                 <Link to='/courses' style={{ textDecoration: 'none' }}>

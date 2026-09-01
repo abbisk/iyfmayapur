@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiCheckCircle, FiDownload, FiHeart, FiLock } from "react-icons/fi";
 
-const amountOptions = [501, 1100, 2100, 5001];
+const amountOptions = [501, 1100, 2100, 3001, 4001, 5001];
 const initialForm = {
   amount: "", first_name: "", middle_name: "", last_name: "", email: "", mobile: "",
   pan_card: "", address_1: "", address_2: "", pin_code: "", district: "", city: "",
