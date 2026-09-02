@@ -14,6 +14,7 @@ import Masonry from "react-masonry-css";
 import { Link } from "react-router-dom";
 import Prabhupada from "../assets/January_20.jpg";
 import AnimatedCard from '../components/AnimatedCard.jsx';
+import { cloudinaryAsset } from "../lib/cloudinary";
 
 const lifeImages = [
   "img0.jpg",
@@ -28,7 +29,7 @@ const lifeImages = [
   "img11.jpg",
   "img9.jpg",
   "img10.jpg",
-].map((img) => `/life/${img}`);
+].map((img) => cloudinaryAsset(`/life/${img}`));
 
 const homepageGalleryPreview = lifeImages.slice(0, 3);
 
@@ -60,7 +61,7 @@ const carouselImages = [
   "/home/youth15.jpeg",
   "/home/youth16.jpeg",
   "/home/youth17.jpeg",
-];
+].map((image) => cloudinaryAsset(image));
 
 const pathways = [
   {
@@ -257,7 +258,7 @@ export default function Home() {
           <div className="home-intro__visual">
             <div className="home-intro__sun" aria-hidden="true" />
             <div className="home-intro__frame">
-              <img src="/home.jpg" alt="Who we are at IYF Mayapur" />
+              <img src={cloudinaryAsset("/home.jpg")} alt="Who we are at IYF Mayapur" />
             </div>
           </div>
         </motion.section>

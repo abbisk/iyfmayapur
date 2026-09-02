@@ -63,7 +63,7 @@ export default function Events() {
           >
             <div className="grid md:grid-cols-[1.1fr_1fr]">
               <div className="relative min-h-[280px] overflow-hidden sm:min-h-[360px]">
-                <img src="/puriCamp.jpeg" alt={featuredEvent.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <img src={featuredEvent.image} alt={featuredEvent.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
                 <span className="absolute left-5 top-5 rounded-full bg-[#fffaf2]/95 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-[#805019] shadow-sm">
                   Upcoming Exclusive

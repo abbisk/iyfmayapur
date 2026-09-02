@@ -1,9 +1,11 @@
+import { cloudinaryAsset } from '../lib/cloudinary';
+
 export const events = [
   {
     slug: 'alumni-camp-jagannath-puri-2026',
     title: 'Alumni Camp 2026 - Jagannath Puri',
     category: 'Alumni Camp',
-    image: '/home.jpg',
+    image: cloudinaryAsset('/puriCamp.jpeg'),
     date: '18th - 20th October, 2026',
     location: 'Sri Jagannath Puri Dham',
     duration: '3-day camp',
@@ -31,7 +33,7 @@ export const events = [
     slug: 'anubhava-youth-festival',
     title: 'Anubhava Youth Festival',
     category: 'Youth Festival',
-    image: '/anubhava.jpg',
+    image: cloudinaryAsset('/anubhava.jpg'),
     date: 'Dates announced soon',
     location: 'Sridham Mayapur',
     duration: 'Full-day celebration',
@@ -43,7 +45,7 @@ export const events = [
     slug: 'lifestyle-management-seminar',
     title: 'Lifestyle Management Seminar',
     category: 'Seminar',
-    image: '/LifestyleManagement.jpeg',
+    image: cloudinaryAsset('/LifestyleManagement.jpeg'),
     date: 'Dates announced soon',
     location: 'IYF Mayapur',
     duration: 'Half-day seminar',
@@ -55,7 +57,7 @@ export const events = [
     slug: 'mayapur-summer-camp',
     title: 'Mayapur Summer Camp',
     category: 'Camp',
-    image: '/mayapurSummerCamp.png',
+    image: cloudinaryAsset('/mayapurSummerCamp.png'),
     date: 'Dates announced soon',
     location: 'Sridham Mayapur',
     duration: 'Multi-day camp',

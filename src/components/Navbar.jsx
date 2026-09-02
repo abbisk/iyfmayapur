@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { events } from '../data/events.js'
+import { events } from '../data/events.js';
 
 const MENU_ITEMS = [
   { name: "Home", path: "/" },

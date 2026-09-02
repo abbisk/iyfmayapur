@@ -1,5 +1,6 @@
 import { IoMdTv } from "react-icons/io"
 import { Link } from "react-router-dom"
+import { cloudinaryAsset } from "../lib/cloudinary"
 
 export function CourseCard({ title, imageUrl, courseId, price }) { 
 
@@ -165,7 +166,7 @@ export function PersonalCourseCard({ title, subtitle, imageUrl, progress }) {
     overflow:'hidden'
 }}>
     <div style={imageContainerStyle}>
-        <img src={imageUrl} alt="image" style={imageStyle} />
+        <img src={cloudinaryAsset(imageUrl)} alt="image" style={imageStyle} />
         <div style={fadeOverlayStyle}></div>
     </div>
     <div>
@@ -230,7 +231,7 @@ export function ProfileCard({ name, email, imageUrl }) {
 
     return (
         <div style={cardStyle}>
-            <img src={imageUrl} alt="Profile" style={imageStyle} />
+            <img src={cloudinaryAsset(imageUrl)} alt="Profile" style={imageStyle} />
             <h2 style={nameStyle}>{name}</h2>
             <p style={emailStyle}>{email}</p>
             <div style={{display: 'flex', justifyContent: 'space-around', marginTop: '1rem'}}>

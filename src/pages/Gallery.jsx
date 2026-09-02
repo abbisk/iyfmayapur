@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiArrowDown, FiX } from "react-icons/fi";
+import { cloudinaryAsset } from "../lib/cloudinary";
 
 const youthImageNumbers = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 
@@ -8,7 +9,7 @@ const allGalleryImages = [
   "/home/youth.jpg",
   ...youthImageNumbers.map((number) => `/home/youth${number}.jpeg`),
   ...Array.from({ length: 12 }, (_, index) => `/life/img${index}.jpg`),
-];
+].map((image) => cloudinaryAsset(image));
 
 const uniqueGalleryImages = allGalleryImages.filter(
   (image, index, images) => images.indexOf(image) === index

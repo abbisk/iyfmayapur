@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { cloudinaryAsset } from "../lib/cloudinary";
 import {
   FiArrowRight,
   FiBookOpen,
@@ -152,7 +153,7 @@ export default function Store() {
   return (
     <div className="book-store-page">
       <section className="book-store-hero">
-        <img src="/store/prabhupada-books-hero.png" alt="A collection of devotional books" />
+        <img src={cloudinaryAsset("/store/prabhupada-books-hero.png")} alt="A collection of devotional books" />
         <div className="book-store-shell book-store-hero__content">
           <p className="book-store-eyebrow">Transcendental literature</p>
           <h1>Books by<br />Śrīla Prabhupāda</h1>

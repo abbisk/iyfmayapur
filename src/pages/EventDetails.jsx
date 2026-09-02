@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FiArrowLeft, FiCalendar, FiCheck, FiClock, FiMapPin, FiUsers } from 'react-icons/fi'
 import { getEventBySlug } from '../data/events.js'
+import { cloudinaryAsset } from '../lib/cloudinary'
 
 const upcomingCampStart = new Date('2026-10-16T00:00:00+05:30').getTime()
 
@@ -163,7 +164,7 @@ export default function EventDetails() {
               {showCampPosterInsteadOfForm ? (
                 <div className="mt-6 overflow-hidden rounded-2xl border border-[#e9dfcd] bg-[#fffcf7]">
                   <img
-                    src="/puriCamp.jpeg"
+                    src={cloudinaryAsset('/puriCamp.jpeg')}
                     alt="Jagannath Puri camp registration details"
                     className="h-full w-full object-cover"
                     loading="lazy"

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTypewriter } from "../components/Typewriter";
+import { cloudinaryAsset } from "../lib/cloudinary";
 
 export default function Sp() {
   const [scrollY, setScrollY] = useState(0);
@@ -44,12 +45,11 @@ const [vh, setVh] = useState(window.innerHeight);
       {/* Slide 1 */}
       <div
         className="fixed top-0 left-0 h-screen w-full
-                   bg-[url('/prabhupada-noback.png')]
                    bg-contain bg-right bg-no-repeat
                    items-center 
                    text-white text-3xl font-bold
                    pointer-events-none"
-        style={{ opacity: opacities[0] }}
+        style={{ opacity: opacities[0], backgroundImage: `url(${cloudinaryAsset('/prabhupada-noback.png')})` }}
       >
         <div className="mt-20 px-10 md:px-20 lg:px-40 text-[3rem]">
           WHO IS 
@@ -65,11 +65,10 @@ const [vh, setVh] = useState(window.innerHeight);
 
 
       <div className="fixed top-0 left-0 h-screen w-full
-                   bg-[url('/prabhupada-with-his-father.jpg')]
                    bg-cover bg-no-repeat
                    pointer-events-none"
                    
-                   style={{opacity: opacities[1]}}>
+                   style={{opacity: opacities[1], backgroundImage: `url(${cloudinaryAsset('/prabhupada-with-his-father.jpg')})`}}>
        
          <p className="absolute bottom-20 md:right-20 lg:right-40 w-[170vh] text-center text-white text-[2.5rem] font-bold bg-black/30">
            Srila Prabhupada was born Abhay Charan De on September 1, 1896 to a pious Hindu family in Calcutta.
@@ -79,10 +78,9 @@ const [vh, setVh] = useState(window.innerHeight);
       {/* Slide 2 */}
       <div
         className="fixed top-0 left-0 h-screen w-full
-                   bg-[url('/prabhupada-gradient.png')]
                    bg-cover bg-no-repeat
                    pointer-events-none"
-        style={{ opacity: opacities[2] }}
+        style={{ opacity: opacities[2], backgroundImage: `url(${cloudinaryAsset('/prabhupada-gradient.png')})` }}
       >
 
         <p className="absolute top-20 right-10 md:right-20 lg:right-40 w-[60vh] text-right text-white text-[2.5rem] font-bold">
@@ -96,10 +94,9 @@ const [vh, setVh] = useState(window.innerHeight);
       {/* Slide 3 */}
       <div
         className="fixed top-0 left-0 h-screen w-full
-                   bg-[url('/prabhupada-gradient.png')]
                    bg-cover bg-no-repeat
                    pointer-events-none"
-        style={{ opacity: opacities[3] }}
+        style={{ opacity: opacities[3], backgroundImage: `url(${cloudinaryAsset('/prabhupada-gradient.png')})` }}
       >
 
         <p className="absolute top-20 right-10 md:right-20 lg:right-40 w-[60vh] text-right text-white text-[2.5rem] font-bold">
@@ -110,10 +107,9 @@ const [vh, setVh] = useState(window.innerHeight);
       {/* Slide 3 */}
       <div
         className="fixed top-0 left-0 h-screen w-full
-                   bg-[url('/prabhupada-gradient.png')]
                    bg-cover bg-no-repeat
                    pointer-events-none"
-        style={{ opacity: opacities[4] }}
+        style={{ opacity: opacities[4], backgroundImage: `url(${cloudinaryAsset('/prabhupada-gradient.png')})` }}
       >
 
         <p className="absolute top-20 right-10 md:right-20 lg:right-40 w-[60vh] text-right text-white text-[2.5rem] font-bold">
