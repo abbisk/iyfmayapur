@@ -63,7 +63,7 @@ export default function Events() {
           >
             <div className="grid md:grid-cols-[1.1fr_1fr]">
               <div className="relative min-h-[280px] overflow-hidden sm:min-h-[360px]">
-                <img src={featuredEvent.image} alt={featuredEvent.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <img src={featuredEvent.image} alt={featuredEvent.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" fetchPriority="high" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
                 <span className="absolute left-5 top-5 rounded-full bg-[#fffaf2]/95 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-[#805019] shadow-sm">
                   Upcoming Exclusive
@@ -139,7 +139,7 @@ export default function Events() {
                       aria-label={`View details for ${event.title}`}
                     >
                       <div className="relative h-64 overflow-hidden">
-                        <img src={event.image} alt={event.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                        <img src={event.image} alt={event.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                         <span className="absolute left-5 top-5 rounded-full bg-[#fffaf2]/95 px-3 py-1.5 text-xs font-bold text-[#805019] shadow-sm">
                           {event.category}

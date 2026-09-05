@@ -4,7 +4,7 @@ import { cloudinaryAsset } from "../lib/cloudinary";
 
 export default function Sp() {
   const [scrollY, setScrollY] = useState(0);
-const [vh, setVh] = useState(window.innerHeight);
+  const [vh, setVh] = useState(window.innerHeight);
 
 
   const  clamp = (num, min=0, max=1) => Math.min(Math.max(num, min), max);
@@ -12,8 +12,18 @@ const [vh, setVh] = useState(window.innerHeight);
   const fadeBetween = (scrollY, start, end) =>  clamp((scrollY - start) / (end - start));
 
   useEffect(() => {
+  let frameId = 0;
+
   const handleScroll = () => {
-    setScrollY(window.scrollY);
+    if (frameId) return;
+
+    frameId = window.requestAnimationFrame(() => {
+      setScrollY((currentScrollY) => {
+        const nextScrollY = window.scrollY;
+        return currentScrollY === nextScrollY ? currentScrollY : nextScrollY;
+      });
+      frameId = 0;
+    });
   };
 
   const handleResize = () => {
@@ -28,6 +38,7 @@ const [vh, setVh] = useState(window.innerHeight);
   return () => {
     window.removeEventListener("scroll", handleScroll);
     window.removeEventListener("resize", handleResize);
+    window.cancelAnimationFrame(frameId);
   };
 }, []);
 

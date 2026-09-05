@@ -98,6 +98,8 @@ const PrabhupadaLife = () => {
                   src={PrabhupadaImg}
                   alt="Srila Prabhupada walking"
                   className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -114,6 +116,8 @@ const PrabhupadaLife = () => {
             src={Teachingbg}
             alt="Teachings Background"
             className="absolute inset-0 w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
           />
 
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 pointer-events-none" />

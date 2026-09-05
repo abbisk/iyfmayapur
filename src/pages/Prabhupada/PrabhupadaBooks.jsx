@@ -46,6 +46,8 @@ const PrabhupadaBooks = () => {
             src={Books}
             alt="Srila Prabhupada Sacred Books"
             className="w-full h-auto max-h-[290px] sm:max-h-[340px] object-contain drop-shadow-md hover:scale-[1.02] transition-transform duration-300"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -55,6 +57,8 @@ const PrabhupadaBooks = () => {
           src={Quotebg}
           alt=""
           className="absolute right-0 top-0 h-full w-auto object-cover opacity-20 pointer-events-none mix-blend-screen"
+          loading="lazy"
+          decoding="async"
         />
 
         <div className="relative z-10 flex items-center gap-4 sm:gap-6 max-w-3xl">

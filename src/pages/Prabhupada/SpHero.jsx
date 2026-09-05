@@ -94,6 +94,8 @@ const SpHero = () => {
             src={HeroImg}
             alt="Srila Prabhupada"
             className="relative z-10 w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[450px] object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.9)]"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
       </div>

@@ -67,6 +67,35 @@
 }
 
 @media (max-width: 640px) {
+  .site-navbar,
+  .site-mobile-menu,
+  .event-popup,
+  .home-button--glass,
+  .home-hero__arrow,
+  .home-hero__pagination {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .site-navbar {
+    background-color: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 1px 10px rgba(37, 33, 22, 0.08);
+  }
+
+  .site-mobile-menu {
+    background-color: rgba(255, 255, 255, 0.98);
+  }
+
+  .event-popup {
+    background-color: rgba(10, 23, 20, 0.82);
+  }
+
+  .home-button--glass,
+  .home-hero__arrow,
+  .home-hero__pagination {
+    background-color: rgba(30, 19, 12, 0.72);
+  }
+
   .camp-banner__content { grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; }
   .camp-banner__info { grid-column: 1; grid-row: 1; padding-right: 0; }
   .camp-banner__actions { grid-column: 2; grid-row: 1; }
@@ -75,6 +104,33 @@
   .camp-banner__timer small { font-size: .5rem; }
   .camp-banner__timer { gap: 5px; }
   .camp-banner__content--minimized { grid-template-columns: minmax(0, 1fr) auto; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .home-button:hover,
+  .home-hero__arrow:hover,
+  .home-pathway-card:hover,
+  .infinite-gallery-card:hover img,
+  .book-card:hover,
+  .book-card:hover .book-card__cover {
+    transform: none;
+    filter: none;
+    box-shadow: inherit;
+  }
+
+  .home-button,
+  .home-hero__arrow,
+  .home-pathway-card,
+  .infinite-gallery-card img,
+  .book-card,
+  .book-card__cover {
+    transition: none;
+  }
+
+  .home-pathway-card,
+  .home-gallery__item {
+    contain: layout paint;
+  }
 }
 
 .home-page {
@@ -638,7 +694,7 @@
 .infinite-gallery-column--3 { animation-duration: 35s; }
 .infinite-gallery-column--4 { animation-name: gallery-stream-reverse; animation-duration: 47s; }
 .infinite-gallery-columns:hover .infinite-gallery-column { animation-play-state: paused; }
-.infinite-gallery-card { position: relative; flex: none; overflow: hidden; width: 100%; height: clamp(230px, 28vw, 400px); padding: 0; border: 0; border-radius: 14px; color: white; background: #38271c; cursor: zoom-in; }
+.infinite-gallery-card { position: relative; flex: none; overflow: hidden; width: 100%; height: clamp(230px, 28vw, 400px); padding: 0; border: 0; border-radius: 14px; color: white; background: #38271c; cursor: zoom-in; content-visibility: auto; contain-intrinsic-size: 400px; }
 .infinite-gallery-card:nth-child(3n + 2) { height: clamp(300px, 36vw, 500px); }
 .infinite-gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 650ms cubic-bezier(.2,.7,.2,1), filter 350ms ease; }
 .infinite-gallery-card span { position: absolute; right: 18px; bottom: 18px; display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; opacity: 0; background: rgba(25,15,9,.3); backdrop-filter: blur(8px); transform: translateY(8px); transition: opacity 220ms ease, transform 220ms ease; }
@@ -688,6 +744,7 @@
 .donation-hero .donation-shell > p:last-child { max-width: 590px; margin: 28px 0 0; color: rgba(255,249,237,.7); font-size: 1.08rem; line-height: 1.7; }
 .donation-layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); align-items: start; gap: 30px; margin-top: -90px; padding-bottom: 120px; }
 .donation-story, .donation-form { border: 1px solid #eadbc2; border-radius: 18px; background: white; box-shadow: 0 24px 70px rgba(66,42,25,.12); }
+.donation-story, .donation-form { contain: layout paint; }
 .donation-story { position: sticky; top: 85px; overflow: hidden; padding: 0 28px 30px; }
 .donation-story__image { height: 235px; margin: 0 -28px 30px; overflow: hidden; }
 .donation-story__image img { width: 100%; height: 100%; object-fit: cover; }
@@ -1168,6 +1225,7 @@
 
 .book-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; }
 .book-card { overflow: hidden; border: 1px solid #e3dbd0; background: white; box-shadow: 0 5px 20px rgba(64, 44, 29, 0.04); transition: box-shadow 250ms ease, transform 250ms ease; }
+.book-card { content-visibility: auto; contain-intrinsic-size: 640px; }
 .book-card:hover { box-shadow: 0 18px 48px rgba(64, 44, 29, 0.13); transform: translateY(-5px); }
 .book-card__visual { position: relative; display: grid; min-height: 360px; place-items: center; overflow: hidden; background: linear-gradient(145deg, #eee5d7, #faf7f0); }
 .book-card__visual::after { content: ""; position: absolute; right: 12%; bottom: 28px; left: 12%; height: 18px; border-radius: 50%; background: rgba(54, 32, 20, 0.22); filter: blur(13px); }

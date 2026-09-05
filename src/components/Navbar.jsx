@@ -15,20 +15,48 @@ const MENU_ITEMS = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const hasLiveEvent = events.some((event) => event.category.toLowerCase().includes('camp'));
 
   useEffect(() => {
+    let frameId = 0;
+    let previousScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (frameId) return;
+
+      frameId = window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+
+        setIsScrolled((scrolled) => {
+          const nextScrolled = currentScrollY > 20;
+          return scrolled === nextScrolled ? scrolled : nextScrolled;
+        });
+
+        setIsVisible((visible) => {
+          if (currentScrollY <= 20) return true;
+          if (Math.abs(currentScrollY - previousScrollY) < 6) return visible;
+          return currentScrollY < previousScrollY;
+        });
+
+        previousScrollY = currentScrollY;
+        frameId = 0;
+      });
     };
 
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.cancelAnimationFrame(frameId);
+    };
   }, []);
 
   return (
     <nav
-      className={`fixed left-0 top-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+      className={`site-navbar fixed left-0 top-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+        isVisible || menuOpen ? 'translate-y-0' : '-translate-y-full'
+      } ${
         isScrolled
           ? "bg-white/20 backdrop-blur-md shadow-sm "
           : "bg-transparent"
@@ -141,7 +169,7 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       <div
-        className={`sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
+        className={`site-mobile-menu sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
           menuOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-4 pointer-events-none"

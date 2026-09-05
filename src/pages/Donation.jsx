@@ -135,7 +135,7 @@ export default function Donation() {
 
       <main className="donation-layout donation-shell">
         <aside className="donation-story">
-          <div className="donation-story__image"><img src={cloudinaryAsset("/donation/Chaitanya-Mahaprabhu.webp")} alt="Chaitanya Mahaprabhu" /></div>
+          <div className="donation-story__image"><img src={cloudinaryAsset("/donation/Chaitanya-Mahaprabhu.webp", { width: 700, crop: "limit" })} alt="Chaitanya Mahaprabhu" loading="lazy" decoding="async" /></div>
           <FiHeart aria-hidden="true" />
           <h2>Your offering makes service possible.</h2>
           <p>Every donation is securely processed by the ISKCON Mayapur Treasury payment gateway.</p>

@@ -9,7 +9,7 @@ const allGalleryImages = [
   "/home/youth.jpg",
   ...youthImageNumbers.map((number) => `/home/youth${number}.jpeg`),
   ...Array.from({ length: 12 }, (_, index) => `/life/img${index}.jpg`),
-].map((image) => cloudinaryAsset(image));
+].map((image) => cloudinaryAsset(image, { width: 900, crop: "limit" }));
 
 const uniqueGalleryImages = allGalleryImages.filter(
   (image, index, images) => images.indexOf(image) === index

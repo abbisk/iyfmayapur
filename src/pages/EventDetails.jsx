@@ -68,7 +68,7 @@ export default function EventDetails() {
       <iframe name="google-form-response" title="Google Form response" className="hidden" onLoad={handleGoogleResponse} />
 
       <section className="relative min-h-[480px] overflow-hidden">
-        <img src={event.image} alt={event.title} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={event.image} alt={event.title} className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#13251c]/95 via-[#13251c]/75 to-[#13251c]/20" />
         <div className="relative mx-auto flex min-h-[480px] max-w-6xl flex-col justify-end px-5 py-14 text-white">
           <Link to="/events" className="absolute top-8 inline-flex items-center gap-2 rounded-full bg-black/25 px-4 py-2 text-sm font-semibold backdrop-blur transition hover:bg-black/40">

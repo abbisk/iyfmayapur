@@ -29,7 +29,7 @@ const lifeImages = [
   "img11.jpg",
   "img9.jpg",
   "img10.jpg",
-].map((img) => cloudinaryAsset(`/life/${img}`));
+].map((img) => cloudinaryAsset(`/life/${img}`, { width: 900, crop: "limit" }));
 
 const homepageGalleryPreview = lifeImages.slice(0, 3);
 
@@ -61,7 +61,7 @@ const carouselImages = [
   "/home/youth15.jpeg",
   "/home/youth16.jpeg",
   "/home/youth17.jpeg",
-].map((image) => cloudinaryAsset(image));
+].map((image) => cloudinaryAsset(image, { width: 1600, crop: "limit" }));
 
 const pathways = [
   {
@@ -99,6 +99,10 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [quoteImage, setQuoteImage] = useState(dailyQuote.url);
+  const visibleCarouselImages = [
+    currentIndex,
+    (currentIndex + 1) % carouselImages.length,
+  ];
 
   useEffect(() => {
     if (isPaused) return undefined;
@@ -132,15 +136,17 @@ export default function Home() {
         transition={{ duration: 0.6 }}
       >
         <div className="home-hero__images">
-          {carouselImages.map((src, index) => (
+          {visibleCarouselImages.map((imageIndex) => (
             <img
-              key={src}
-              src={src}
-              alt={`IYF Mayapur youth gathering ${index + 1}`}
+              key={carouselImages[imageIndex]}
+              src={carouselImages[imageIndex]}
+              alt={`IYF Mayapur youth gathering ${imageIndex + 1}`}
               className={`home-hero__image ${
-                index === currentIndex ? "is-active" : ""
+                imageIndex === currentIndex ? "is-active" : ""
               }`}
-              fetchPriority={index === 0 ? "high" : "auto"}
+              loading={imageIndex === currentIndex ? "eager" : "lazy"}
+              fetchPriority={imageIndex === currentIndex ? "high" : "low"}
+              decoding="async"
             />
           ))}
         </div>
@@ -258,7 +264,7 @@ export default function Home() {
           <div className="home-intro__visual">
             <div className="home-intro__sun" aria-hidden="true" />
             <div className="home-intro__frame">
-              <img src={cloudinaryAsset("/home.jpg")} alt="Who we are at IYF Mayapur" />
+              <img src={cloudinaryAsset("/home.jpg", { width: 1200, crop: "limit" })} alt="Who we are at IYF Mayapur" loading="lazy" decoding="async" />
             </div>
           </div>
         </motion.section>
@@ -312,6 +318,8 @@ export default function Home() {
                 src={quoteImage}
                 alt={`Srila Prabhupada daily quote for ${dailyQuote.label}`}
                 onError={() => setQuoteImage(Prabhupada)}
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
@@ -340,6 +348,7 @@ export default function Home() {
                   src={src}
                   alt={`Life at IYF Mayapur ${index + 1}`}
                   loading="lazy"
+                  decoding="async"
                 />
               </figure>
             ))}

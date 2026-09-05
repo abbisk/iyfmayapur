@@ -1,19 +1,29 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from './components/Navbar.jsx'
-import Prabhupada from './pages/Prabhupada/Prabhupada.jsx'
-import StudentCourses from './pages/StudentCourses.jsx'
-import Player from './pages/Player.jsx'
-import { Home, Events, Seva, Store, Courses, Donation } from './pages/index.jsx'
-import ViewCourse from './pages/ViewCourse.jsx'
-import PageNotFound from './pages/PageNotFound.jsx'
-import Dashboard from './pages/Dashboard.jsx'
 import Footer from './components/Footer.jsx'
-import Gallery from "./pages/Gallery.jsx"
-import EventDetails from './pages/EventDetails.jsx'
 import PageTransition from './components/PageTransition.jsx'
 import { getEventBySlug } from './data/events.js'
+
+const Home = lazy(() => import('./pages/Home.jsx'))
+const Prabhupada = lazy(() => import('./pages/Prabhupada/Prabhupada.jsx'))
+const StudentCourses = lazy(() => import('./pages/StudentCourses.jsx'))
+const Player = lazy(() => import('./pages/Player.jsx'))
+const ViewCourse = lazy(() => import('./pages/ViewCourse.jsx'))
+const PageNotFound = lazy(() => import('./pages/PageNotFound.jsx'))
+const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
+const Gallery = lazy(() => import('./pages/Gallery.jsx'))
+const EventDetails = lazy(() => import('./pages/EventDetails.jsx'))
+const Events = lazy(() => import('./pages/Events.jsx'))
+const Seva = lazy(() => import('./pages/Seva.jsx'))
+const Store = lazy(() => import('./pages/Store.jsx'))
+const Courses = lazy(() => import('./pages/Courses.jsx'))
+const Donation = lazy(() => import('./pages/Donation.jsx'))
+
+function PageLoader() {
+  return <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Loading...</div>
+}
 
 function App() {
   const location = useLocation()
@@ -44,23 +54,25 @@ function App() {
 
       <main className="pt-16">
         <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-            <Route path="/prabhupada" element={<PageTransition><Prabhupada /></PageTransition>} />
-            <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
-            <Route path="/events/:eventSlug" element={<PageTransition><EventDetails /></PageTransition>} />
-            <Route path="/seva" element={<PageTransition><Seva /></PageTransition>} />
-            <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
-            <Route path="/donation" element={<PageTransition><Donation /></PageTransition>} />
-            <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
-            <Route path="/youth-courses" element={<PageTransition><StudentCourses /></PageTransition>} />
-            <Route path="/course/:courseId" element={<PageTransition><ViewCourse /></PageTransition>} />
-            <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
-            <Route path="/player" element={<PageTransition><Player /></PageTransition>} />
-            <Route path="/player/:courseId" element={<PageTransition><Player /></PageTransition>} />
-            <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
-            <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+              <Route path="/prabhupada" element={<PageTransition><Prabhupada /></PageTransition>} />
+              <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
+              <Route path="/events/:eventSlug" element={<PageTransition><EventDetails /></PageTransition>} />
+              <Route path="/seva" element={<PageTransition><Seva /></PageTransition>} />
+              <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
+              <Route path="/donation" element={<PageTransition><Donation /></PageTransition>} />
+              <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
+              <Route path="/youth-courses" element={<PageTransition><StudentCourses /></PageTransition>} />
+              <Route path="/course/:courseId" element={<PageTransition><ViewCourse /></PageTransition>} />
+              <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
+              <Route path="/player" element={<PageTransition><Player /></PageTransition>} />
+              <Route path="/player/:courseId" element={<PageTransition><Player /></PageTransition>} />
+              <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+              <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
+            </Routes>
+          </Suspense>
         </AnimatePresence>
       </main>
 
@@ -71,7 +83,7 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a1714]/65 p-4 backdrop-blur-sm"
+            className="event-popup fixed inset-0 z-50 flex items-center justify-center bg-[#0a1714]/65 p-4 backdrop-blur-sm"
           >
             <motion.div
               initial={{ opacity: 0, y: 18, scale: 0.93, rotateX: -8 }}
