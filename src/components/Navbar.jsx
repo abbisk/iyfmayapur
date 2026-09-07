@@ -36,7 +36,7 @@ export default function Navbar() {
         setIsVisible((visible) => {
           if (currentScrollY <= 20) return true;
           if (Math.abs(currentScrollY - previousScrollY) < 6) return visible;
-          return currentScrollY < previousScrollY;
+          return currentScrollY > previousScrollY;
         });
 
         previousScrollY = currentScrollY;
