@@ -1,6 +1,8 @@
-import { FiBarChart2, FiCheck, FiClock, FiFileText, FiPlayCircle, FiStar, FiUsers } from "react-icons/fi";
-import { Link, useParams } from "react-router-dom";
-import { youthCourses } from "../data/youthCourses.jsx";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { getCourseById, getStudentById, enrollInCourse, initiateTreasuryPayment, getTreasuryPaymentStatus } from "../utils/lmsState";
+import { FaGraduationCap, FaClock, FaBookOpen, FaAward, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
 
 export default function ViewCourse() {
   const { courseId } = useParams();
@@ -115,7 +117,7 @@ export default function ViewCourse() {
         if (payment?.status === 'success') {
           await enrollInCourse(courseId);
           window.history.replaceState({}, '', `/course/${courseId}`);
-          navigate(`/player/${courseId}`);
+          navigate(`/lms/player/${courseId}`);
           return;
         }
 
@@ -146,7 +148,7 @@ export default function ViewCourse() {
         <h2 className="text-2xl font-bold text-gray-800">Course Not Found</h2>
         <p className="text-gray-600 mt-2">The course you are looking for does not exist or has been removed.</p>
         <button 
-          onClick={() => navigate('/')} 
+          onClick={() => navigate('/lms')} 
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
         >
           Back to Courses
@@ -177,7 +179,7 @@ export default function ViewCourse() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        navigate('/login');
+        navigate('/lms/login');
         return;
       }
 
@@ -185,7 +187,7 @@ export default function ViewCourse() {
 
       if (amount === 0) {
         await enrollInCourse(course._id);
-        navigate(`/player/${course._id}`);
+        navigate(`/lms/player/${course._id}`);
         return;
       }
 
@@ -232,7 +234,7 @@ export default function ViewCourse() {
   return (
     <div className="bg-gray-50 min-h-screen pt-10 pb-16">
       {/* Hero Header Banner */}
-      <div className="relative bg-gradient-to-r from-slate-900 to-indigo-950 text-white py-16 px-4 md:px-8 overflow-hidden">
+      <div className="relative bg-gradient-to-r from-slate-900 to-indigo-950 text-white py-16 px-4 md:px-8 overflow-visible">
         {/* Glow Effects */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
@@ -243,7 +245,7 @@ export default function ViewCourse() {
               {course.category} Course
             </span>
             
-            <h1 className="text-3xl md:text-5xl font-bold font-serif mt-4 text-white leading-tight">
+            <h1 className="max-w-full break-words text-3xl md:text-5xl font-bold font-serif mt-4 text-white leading-tight">
               {course.title}
             </h1>
             
@@ -353,7 +355,7 @@ export default function ViewCourse() {
               <img 
                 src={course.imgUrl} 
                 alt={course.title} 
-                className="w-full h-full object-cover opacity-90"
+                  className="w-full h-full object-cover opacity-90"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent"></div>
             </div>
@@ -367,7 +369,7 @@ export default function ViewCourse() {
               
               {isEnrolled ? (
                 <button
-                  onClick={() => navigate(`/player/${course._id}`)}
+                  onClick={() => navigate(`/lms/player/${course._id}`)}
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <FaGraduationCap className="text-xl" />

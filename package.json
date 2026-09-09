@@ -16,6 +16,7 @@
     "cloudinary": "^2.11.0",
     "flowbite": "^4.0.1",
     "framer-motion": "^12.27.1",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^1.34.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -23,6 +24,7 @@
     "react-icons": "^5.5.0",
     "react-masonry-css": "^1.0.16",
     "react-router-dom": "^7.12.0",
+    "react-spinners": "^0.17.1",
     "swiper": "^12.0.3",
     "tailwindcss": "^4.1.18"
   },

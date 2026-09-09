@@ -19,6 +19,7 @@ const Events = lazy(() => import('./pages/Events.jsx'))
 const Seva = lazy(() => import('./pages/Seva.jsx'))
 const Store = lazy(() => import('./pages/Store.jsx'))
 const Courses = lazy(() => import('./pages/Courses.jsx'))
+const LmsApp = lazy(() => import('./lms/LmsApp.jsx'))
 const Donation = lazy(() => import('./pages/Donation.jsx'))
 
 function PageLoader() {
@@ -27,6 +28,7 @@ function PageLoader() {
 
 function App() {
   const location = useLocation()
+  const isLmsRoute = location.pathname.startsWith('/lms')
   const [showEventPopup, setShowEventPopup] = useState(false)
   const event = getEventBySlug('alumni-camp-jagannath-puri-2026')
 
@@ -50,9 +52,9 @@ function App() {
 
   return (
     <>
-      <Navbar />
+      {!isLmsRoute && <Navbar />}
 
-      <main className="pt-16">
+      <main className={isLmsRoute ? '' : 'pt-16'}>
         <AnimatePresence mode="wait">
           <Suspense fallback={<PageLoader />}>
             <Routes location={location} key={location.pathname}>
@@ -64,6 +66,7 @@ function App() {
               <Route path="/store" element={<PageTransition><Store /></PageTransition>} />
               <Route path="/donation" element={<PageTransition><Donation /></PageTransition>} />
               <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
+              <Route path="/lms/*" element={<LmsApp />} />
               <Route path="/youth-courses" element={<PageTransition><StudentCourses /></PageTransition>} />
               <Route path="/course/:courseId" element={<PageTransition><ViewCourse /></PageTransition>} />
               <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
@@ -141,7 +144,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      <Footer />
+      {!isLmsRoute && <Footer />}
     </>
   );
 }

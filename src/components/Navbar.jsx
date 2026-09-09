@@ -5,7 +5,7 @@ import { events } from '../data/events.js';
 const MENU_ITEMS = [
   { name: "Home", path: "/" },
   { name: "Events", path: "/events" },
-  { name: "Courses", path: "/courses" },
+  { name: "Courses", path: "/lms" },
   { name: "Gallery", path: "/gallery" },
   { name: "Store", path: "/store" },
   { name: "Donation", path: "/donation" },
