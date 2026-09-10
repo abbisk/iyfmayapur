@@ -73,7 +73,7 @@ function normalizeStudent(student) {
   };
 }
 
-const PAYMENT_API_BASE_URL = import.meta.env.VITE_PAYMENT_API_URL || 'http://localhost:1769';
+const PAYMENT_API_BASE_URL = import.meta.env.VITE_PAYMENT_API_URL || '';
 
 // Helper wrapper for fetch requests
 async function apiRequest(endpoint, options = {}) {
@@ -318,8 +318,11 @@ export async function initiateTreasuryPayment(paymentData) {
   });
 }
 
-export async function getTreasuryPaymentStatus(referenceId) {
-  return await paymentApiRequest(`/api/payment/status/${encodeURIComponent(referenceId)}`);
+export async function getTreasuryPaymentStatus(referenceId, paymentToken = '') {
+  const endpoint = paymentToken
+    ? `/api/payment/status?token=${encodeURIComponent(paymentToken)}`
+    : `/api/payment/status/${encodeURIComponent(referenceId)}`;
+  return await paymentApiRequest(endpoint);
 }
 
 export async function getTreasuryPaymentReceipt(referenceId) {

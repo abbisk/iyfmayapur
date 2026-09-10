@@ -4,10 +4,10 @@ export default function Courses() {
   const navigate = useNavigate();
 
   return (
-    <div className="lms-category-grid w-full">
+    <div className="grid h-[calc(100vh-4rem)] w-full grid-cols-2 gap-0 bg-slate-900 max-md:h-[calc(100dvh-4rem)] max-md:grid-cols-1">
       {/* Youth Courses */}
       <div
-        className="lms-category-panel lms-category-panel--youth relative overflow-hidden group flex items-center justify-center cursor-pointer"
+        className="relative flex min-h-0 min-w-0 cursor-pointer items-center justify-center overflow-hidden p-0 group"
         onClick={() => navigate('/lms/youth')}
       >
         {/* Background image */}
@@ -22,7 +22,7 @@ export default function Courses() {
 
       {/* Vedic Courses */}
       <div
-        className="lms-category-panel lms-category-panel--vedic relative overflow-hidden group flex items-center justify-center cursor-pointer"
+        className="relative flex min-h-0 min-w-0 cursor-pointer items-center justify-center overflow-hidden p-0 group"
         onClick={() => navigate('/lms/vedic')}
       >
         <div className="absolute inset-0 bg-[url('/dev.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-110"></div>

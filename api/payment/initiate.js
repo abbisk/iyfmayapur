@@ -15,7 +15,7 @@ export default function handler(request, response) {
       dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
       reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
       mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
-      transaction_purpose: "General Donation", pan_card: input.pan_card || "", passport_no: "",
+      transaction_purpose: input.transaction_purpose || "General Donation", course_id: input.course_id || "", pan_card: input.pan_card || "", passport_no: "",
       address_1: input.address_1, address_2: input.address_2 || "", post_office: "", pin_code: input.pin_code,
       district: input.district, city: input.city, state: input.state, country: input.country,
     };

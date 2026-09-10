@@ -15,9 +15,9 @@ import RegisterPage from './pages/RegisterPage.jsx'
 
 function App() {
   return (
-    <div className="lms-app min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-16 ">
         <Routes>
           <Route index element={<Courses />} />
           <Route path="youth" element={<StudentCourses />} />

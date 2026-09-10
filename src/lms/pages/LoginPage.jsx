@@ -26,7 +26,7 @@ export default function LoginPage() {
         const token = res.token;
         localStorage.setItem("token", token);
         alert("User logged in successfully!");
-        window.open("/dashboard", "_self");
+        window.open("/lms/dashboard", "_self");
       }
     } catch (err) {
       const errorMessage = err?.message || "An error occurred during login.";

@@ -17,14 +17,14 @@ export default function Footer() {
   }, [token]);
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-800 py-8 mt-auto">
+    <footer className="flex min-h-16 flex-1 items-center border-t border-slate-800 bg-slate-950 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           
           {/* Brand */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center">
-              <img src="logo.png" alt=""/>
+              <img src="/logo.png" alt=""/>
             </div>
             <div>
               <p className="text-white font-bold text-sm">IYF Mayapur LMS</p>

@@ -19,8 +19,9 @@ export default function Navbar() {
 
 
   const isActive = (path) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
+    const routePath = path === '/' ? '/lms' : `/lms${path}`;
+    if (path === '/') return location.pathname === '/lms' || location.pathname === '/lms/';
+    return location.pathname === routePath || location.pathname.startsWith(`${routePath}/`);
   };
 
   const handleLogout = () => {
@@ -30,13 +31,13 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-16 z-50 bg-blue-300 backdrop-blur-xl border-b border-slate-800 shadow-lg">
+    <nav className="fixed top-0 left-0 z-50 h-16 w-full border-b border-slate-800 bg-blue-300 shadow-lg backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
 
         {/* Logo */}
         <Link to="/lms" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-all duration-300  ">
-            <img src="logo.png" alt=""/>
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/30 transition-all duration-300 group-hover:shadow-indigo-500/50">
+            <img className="block h-full w-full object-contain" src="/logo.png" alt="IYF Mayapur"/>
           </div>
           <div className="flex flex-col">
             <span className="text-white font-bold text-lg leading-tight font-lexend">IYF Mayapur LMS</span>
@@ -45,7 +46,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <ul className="lms-desktop-nav items-center gap-1">
+        <ul className="hidden list-none items-center gap-5 p-0 md:flex">
           {navLinks.map((item) => (
             <li key={item.path}>
               <Link
@@ -96,7 +97,7 @@ export default function Navbar() {
           <li>
             <a
               href={MAIN_SITE_URL}
-              className="lms-main-site-link px-3 py-2 rounded text-sm font-semibold transition-all duration-200"
+              className="rounded border border-indigo-950/25 bg-white/70 px-3 py-2 text-sm font-semibold text-indigo-950 transition-all duration-200 hover:bg-indigo-950 hover:text-white"
             >
               Main Site
             </a>
@@ -105,11 +106,11 @@ export default function Navbar() {
         </ul>
 
         {/* Back to Main Site + Hamburger */}
-        <div className="lms-navbar-actions flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           {token ? (
             <button
             onClick={handleLogout}
-            className="hidden sm:flex items-center gap-2 text-black hover:text-white text-xs font-semibold bg-indigo-300  px-3 py-2 rounded-lg border border-slate-700 transition-all duration-200"
+            className="hidden min-h-9 items-center gap-2 rounded-lg border border-slate-700 bg-indigo-300 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:border-indigo-950 hover:bg-indigo-800 hover:text-white sm:flex"
           >
             <FaArrowLeft className="text-xs" />
             Logout
@@ -117,13 +118,13 @@ export default function Navbar() {
           ):(<>
             <Link
             to='/lms/register'
-            className="hidden sm:flex items-center gap-2 text-black hover:text-white text-xs font-semibold bg-indigo-300  px-3 py-2 rounded-lg border border-slate-700 transition-all duration-200"
+            className="hidden min-h-9 items-center gap-2 rounded-lg border border-slate-700 bg-indigo-300 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:border-indigo-950 hover:bg-indigo-800 hover:text-white sm:flex"
           >
             Register
           </Link>
             <Link
             to='/lms/login'
-            className="hidden sm:flex items-center gap-2 text-white text-xs font-semibold bg-indigo-500 hover:bg-indigo-800 px-3 py-2 rounded-lg border border-slate-700 transition-all duration-200"
+            className="hidden min-h-9 items-center gap-2 rounded-lg border border-slate-700 bg-indigo-500 px-3 py-2 text-xs font-semibold text-white transition hover:border-indigo-950 hover:bg-indigo-800 sm:flex"
           >
             <FaArrowLeft className="text-xs" />
             Login
@@ -133,7 +134,8 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="lms-mobile-menu-toggle text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-lg transition"
+            type="button"
+            className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white md:hidden"
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
           >
@@ -144,11 +146,11 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`lms-mobile-menu fixed top-16 left-0 w-full bg-blue-300 backdrop-blur-xl border-b border-slate-800 transition-all duration-300 overflow-hidden ${
+        className={`fixed left-0 top-16 z-40 block w-full overflow-hidden border-b border-slate-800 bg-blue-300 backdrop-blur-xl transition-all duration-300 md:hidden ${
           menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <ul className="flex flex-col p-4 gap-1 " >
+        <ul className="flex flex-col p-4 gap-1">
           {navLinks.map((item) => (
             <li key={item.path}>
               <Link
