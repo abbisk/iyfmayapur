@@ -312,7 +312,7 @@ export async function initiateTreasuryPayment(paymentData) {
     throw new Error('User session is required to start a payment.');
   }
 
-  return await paymentApiRequest('/api/payment/initiate', {
+  return await paymentApiRequest('/api/lms/payment/initiate', {
     method: 'POST',
     body: JSON.stringify(paymentData),
   });
@@ -320,8 +320,8 @@ export async function initiateTreasuryPayment(paymentData) {
 
 export async function getTreasuryPaymentStatus(referenceId, paymentToken = '') {
   const endpoint = paymentToken
-    ? `/api/payment/status?token=${encodeURIComponent(paymentToken)}`
-    : `/api/payment/status/${encodeURIComponent(referenceId)}`;
+    ? `/api/lms/payment/status?token=${encodeURIComponent(paymentToken)}`
+    : `/api/lms/payment/status/${encodeURIComponent(referenceId)}`;
   return await paymentApiRequest(endpoint);
 }
 

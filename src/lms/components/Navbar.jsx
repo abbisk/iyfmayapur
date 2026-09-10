@@ -27,7 +27,7 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setToken(false);
-    window.location.href = '/login'; // Redirect to login page after logout
+    window.location.href = '/lms/login'; // Redirect to login page after logout
   };
 
   return (

@@ -104,6 +104,26 @@ async function handleInitiate(request, response) {
   sendJson(response, 200, { reference_id: referenceId, payment_url: `${GATEWAY_URL}?dept_code=${DEPARTMENT_CODE}&data=${encodeURIComponent(data)}` });
 }
 
+async function handleLmsInitiate(request, response) {
+  const input = await readJson(request);
+  const required = [...requiredFields, "course_id"];
+  const missing = required.filter((field) => !String(input[field] ?? "").trim());
+  const amount = Number(input.amount);
+  if (missing.length || !Number.isFinite(amount) || amount <= 0) return sendJson(response, 400, { error: "Please complete the course payment details.", fields: missing });
+  const referenceId = `IYF-LMS-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
+  const payload = {
+    dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
+    reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
+    mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
+    transaction_purpose: `LMS Course Enrollment (course_id:${input.course_id})`, course_id: String(input.course_id), pan_card: "", passport_no: "",
+    address_1: input.address_1, address_2: input.address_2 || "", post_office: input.post_office || "",
+    pin_code: input.pin_code, district: input.district, city: input.city, state: input.state, country: input.country,
+  };
+  payments.set(referenceId, { ...payload, status: "pending", created_at: new Date().toISOString() });
+  const data = encryptPayload(payload);
+  sendJson(response, 200, { reference_id: referenceId, payment_url: `${GATEWAY_URL}?dept_code=${DEPARTMENT_CODE}&data=${encodeURIComponent(data)}` });
+}
+
 function handleCallback(requestUrl, response) {
   try {
     const result = decryptPayload(requestUrl.searchParams.get("data") || "");
@@ -127,6 +147,7 @@ const server = createServer(async (request, response) => {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   try {
     if (request.method === "POST" && requestUrl.pathname === "/api/payment/initiate") return await handleInitiate(request, response);
+    if (request.method === "POST" && requestUrl.pathname === "/api/lms/payment/initiate") return await handleLmsInitiate(request, response);
     if (request.method === "GET" && requestUrl.pathname === "/api/payment/callback") return handleCallback(requestUrl, response);
     const statusMatch = requestUrl.pathname.match(/^\/api\/payment\/status\/([^/]+)$/);
     if (request.method === "GET" && requestUrl.pathname === "/api/payment/status" && requestUrl.searchParams.has("token")) {
@@ -136,6 +157,12 @@ const server = createServer(async (request, response) => {
       const payment = payments.get(decodeURIComponent(statusMatch[1]));
       if (!payment) return sendJson(response, 404, { error: "Payment record not found." });
       return sendJson(response, 200, { reference_id: payment.reference_id, amount: payment.amount, first_name: payment.first_name, transaction_purpose: payment.transaction_purpose, course_id: payment.course_id || "", status: payment.status });
+    }
+    const lmsStatusMatch = requestUrl.pathname.match(/^\/api\/lms\/payment\/status\/([^/]+)$/);
+    if (request.method === "GET" && lmsStatusMatch) {
+      const payment = payments.get(decodeURIComponent(lmsStatusMatch[1]));
+      if (!payment || !payment.course_id) return sendJson(response, 404, { error: "LMS payment record not found." });
+      return sendJson(response, 200, { reference_id: payment.reference_id, amount: payment.amount, transaction_purpose: payment.transaction_purpose, course_id: payment.course_id, status: payment.status });
     }
     const receiptMatch = requestUrl.pathname.match(/^\/api\/payment\/receipt\/([^/]+)$/);
     if (request.method === "GET" && receiptMatch) {
