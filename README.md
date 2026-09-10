@@ -10,6 +10,8 @@ The one-time donation flow uses the ISKCON Mayapur Treasury gateway. Keep the Tr
 
 Production must expose the Node payment server at `/api/payment/*`, set `PUBLIC_SITE_URL=https://iyfmayapur.org`, and configure Treasury's callback URL as `https://iyfmayapur.org/api/payment/callback`.
 
+LMS course payments use the separate `/api/lms/payment/initiate` and `/api/lms/payment/status` endpoints. They use the same Treasury gateway and credentials, but require a course ID and receive an `IYF-LMS-*` reference. Treasury's single configured callback URL remains `/api/payment/callback`; it dispatches LMS payments back to the LMS course page and donation payments back to the donation page.
+
 The active Treasury request host is configured with `MAYAPUR_PAYMENT_GATEWAY_URL`. Use the non-`www` host (`https://payments.mayapur.com/process/payment/request`), because the `www.payments.mayapur.com` hostname does not resolve.
 
 ### Vercel deployment

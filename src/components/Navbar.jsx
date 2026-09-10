@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { events } from '../data/events.js';
 
 const MENU_ITEMS = [
   { name: "Home", path: "/" },
   { name: "Events", path: "/events" },
-  { name: "Courses", path: "/courses" },
+  { name: "Courses", path: "/lms" },
   { name: "Gallery", path: "/gallery" },
   { name: "Store", path: "/store" },
   { name: "Donation", path: "/donation" },
@@ -14,20 +15,48 @@ const MENU_ITEMS = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const hasLiveEvent = events.some((event) => event.category.toLowerCase().includes('camp'));
 
   useEffect(() => {
+    let frameId = 0;
+    let previousScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (frameId) return;
+
+      frameId = window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+
+        setIsScrolled((scrolled) => {
+          const nextScrolled = currentScrollY > 20;
+          return scrolled === nextScrolled ? scrolled : nextScrolled;
+        });
+
+        setIsVisible((visible) => {
+          if (currentScrollY <= 20) return true;
+          if (Math.abs(currentScrollY - previousScrollY) < 6) return visible;
+          return currentScrollY > previousScrollY;
+        });
+
+        previousScrollY = currentScrollY;
+        frameId = 0;
+      });
     };
 
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.cancelAnimationFrame(frameId);
+    };
   }, []);
 
   return (
     <nav
-      style={{ top: 'var(--camp-banner-height, 0px)' }}
-      className={`fixed left-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+      className={`site-navbar fixed left-0 top-0 w-full h-16 z-40 px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+        isVisible || menuOpen ? 'translate-y-0' : '-translate-y-full'
+      } ${
         isScrolled
           ? "bg-white/20 backdrop-blur-md shadow-sm "
           : "bg-transparent"
@@ -64,7 +93,22 @@ export default function Navbar() {
             >
               {({ isActive }) => (
                 <>
-                  {item.name}
+                  {item.name === 'Events' ? (
+                    <span className="relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-amber-200/70 bg-gradient-to-r from-amber-100/80 via-orange-50 to-emerald-100/80 px-2.5 py-1 shadow-[0_0_18px_rgba(245,158,11,0.12)]">
+                      <span className="relative z-10 font-medium">{item.name}</span>
+                      <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/90 to-transparent opacity-80 animate-[shimmer_2.8s_ease-in-out_infinite]" />
+                      {hasLiveEvent && (
+                        <span className="relative inline-flex h-2.5 w-2.5 items-center justify-center">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.9)]" />
+                        </span>
+                      )}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2">
+                      {item.name}
+                    </span>
+                  )}
 
                   {/* Active Page Indicator */}
                   {isActive && (
@@ -96,8 +140,14 @@ export default function Navbar() {
         type="button"
         aria-label="Toggle Navigation Menu"
         onClick={() => setMenuOpen((prev) => !prev)}
-        className="sm:hidden p-2 text-gray-800 focus:outline-none"
+        className="sm:hidden relative p-2 text-gray-800 focus:outline-none"
       >
+        {hasLiveEvent && (
+          <span className="absolute -right-0.5 -top-0.5 inline-flex h-3 w-3 items-center justify-center">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.9)]" />
+          </span>
+        )}
         <div className="w-6 h-5 flex flex-col justify-between">
           <span
             className={`h-0.5 w-full bg-current rounded transition-transform duration-300 ${
@@ -119,17 +169,13 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       <div
-        style={{ top: 'calc(var(--camp-banner-height, 0px) + 4rem)' }}
-        className={`sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
+        className={`site-mobile-menu sm:hidden fixed inset-x-0 top-16 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-xl transition-all duration-300 ease-in-out ${
           menuOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
-        <div
-          style={{ maxHeight: 'calc(100vh - (var(--camp-banner-height, 0px) + 4rem))' }}
-          className="flex flex-col px-6 py-6 overflow-y-auto"
-        >
+        <div className="flex max-h-[calc(100vh-4rem)] flex-col overflow-y-auto px-6 py-6">
           {/* Navigation Links */}
           <ul className="flex flex-col space-y-1">
             {MENU_ITEMS.map((item) => (
@@ -147,7 +193,19 @@ export default function Navbar() {
                 >
                   {({ isActive }) => (
                     <>
-                      <span>{item.name}</span>
+                      {item.name === 'Events' ? (
+                        <span className="inline-flex items-center gap-2">
+                          <span>{item.name}</span>
+                          {hasLiveEvent && (
+                            <span className="relative inline-flex h-2.5 w-2.5 items-center justify-center">
+                              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.9)]" />
+                            </span>
+                          )}
+                        </span>
+                      ) : (
+                        <span>{item.name}</span>
+                      )}
                       {isActive && (
                         <span className="text-amber-500 text-xs">✦</span>
                       )}

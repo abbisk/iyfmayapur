@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { cloudinaryAsset } from '../lib/cloudinary';
 
 export default function Courses() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function Courses() {
         onClick={() => navigate('/youth-courses')}
       >
         {/* Background image */}
-        <div className="absolute inset-0 bg-[url('/road.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-110"></div>
+        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${cloudinaryAsset('/road.jpg')})` }}></div>
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/40 transition-colors duration-700 group-hover:bg-black/60"></div>
         {/* Text */}
@@ -25,7 +26,7 @@ export default function Courses() {
         className="flex-1 w-full md:w-1/2 relative min-h-[50vh] md:min-h-screen overflow-hidden group flex items-center justify-center cursor-pointer"
         onClick={() => navigate('/vedic-courses')}
       >
-        <div className="absolute inset-0 bg-[url('/dev.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-110"></div>
+        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${cloudinaryAsset('/dev.jpg')})` }}></div>
         <div className="absolute inset-0 bg-black/40 transition-colors duration-700 group-hover:bg-black/60"></div>
         <h2 className="relative z-10 text-white text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-semibold tracking-wide text-center px-2 transition-transform duration-700 group-hover:-translate-y-2">
           Vedic Courses

@@ -1,6 +1,8 @@
-import road from '/road.jpg'
-import enrolledCourses from '../data/enrolledCourses'
-import { CourseCard } from '../components/Card'
+import { CourseCard } from '../components/Card';
+import { cloudinaryAsset } from '../lib/cloudinary';
+import enrolledCourses from '../data/enrolledCourses';
+
+const road = cloudinaryAsset('/road.jpg');
 
 export default function Dashboard(){
 
@@ -31,9 +33,9 @@ function EnrolledCourses({type}){
 
                 <div className='flex flex-wrap gap-[1rem] m-[1rem]'>
 
-                {enrolledCourses.map( (course)=>(
-                     <CourseCard title={course.title} id={course.id} price={course.price} imageUrl={course.imageUrl} />
-                ) )}
+                {enrolledCourses.map((course) => (
+                     <CourseCard title={course.title} id={course.id} price={course.price} imageUrl={cloudinaryAsset(course.imageUrl)} />
+                ))}
                 </div>
         </div>
     )

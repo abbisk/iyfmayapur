@@ -1,0 +1,22 @@
+[
+    {"id": "course124",
+            "title": "Meditation for Inner Peace",
+            "description": "Learn simple yet profound meditation technique to calm the mind and connect with your inner self.",
+            "price": "$19.99",
+        "imageUrl": "/hero.png"},
+    {"id": "course125",
+            "title": "Yoga for Beginners",
+            "description": "Discover the basics of yoga and start your journey towards improved flexibility and mindfulness.",
+            "price": "$29.99",
+        "imageUrl": "/radha_madhava.jpg"},
+    {"id": "course126",
+            "title": "Mindfulness in Daily Life",
+            "description": "Learn how to incorporate mindfulness into your everyday routine for reduced stress and increased happiness.",
+            "price": "$24.99",
+        "imageUrl": "/youth.jpg"},
+        {"id": "course127",
+            "title": "Devotion and Love",
+            "description": "Explore the path of devotion and love through Bhakti Yoga practices and teachings.",
+            "price": "$34.99",
+        "imageUrl": "/home.jpg"}
+]

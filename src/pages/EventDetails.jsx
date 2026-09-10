@@ -1,10 +1,24 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FiArrowLeft, FiCalendar, FiCheck, FiClock, FiMapPin, FiUsers } from 'react-icons/fi'
 import { getEventBySlug } from '../data/events.js'
+import { cloudinaryAsset } from '../lib/cloudinary'
+
+const upcomingCampStart = new Date('2026-10-16T00:00:00+05:30').getTime()
 
 function getResponseUrl(url) {
   return url?.replace(/\/viewform(?:\?.*)?$/, '/formResponse')
+}
+
+function getTimeLeft(targetTime) {
+  const difference = Math.max(targetTime - Date.now(), 0)
+
+  return {
+    days: Math.floor(difference / 86400000),
+    hours: Math.floor((difference / 3600000) % 24),
+    minutes: Math.floor((difference / 60000) % 60),
+    seconds: Math.floor((difference / 1000) % 60),
+  }
 }
 
 export default function EventDetails() {
@@ -13,6 +27,15 @@ export default function EventDetails() {
   const formRef = useRef(null)
   const [status, setStatus] = useState('idle')
   const [configurationError, setConfigurationError] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft(upcomingCampStart))
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setTimeLeft(getTimeLeft(upcomingCampStart))
+    }, 1000)
+
+    return () => window.clearInterval(timer)
+  }, [])
 
   if (!event) return <Navigate to="/events" replace />
 
@@ -45,7 +68,7 @@ export default function EventDetails() {
       <iframe name="google-form-response" title="Google Form response" className="hidden" onLoad={handleGoogleResponse} />
 
       <section className="relative min-h-[480px] overflow-hidden">
-        <img src={event.image} alt={event.title} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={event.image} alt={event.title} className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#13251c]/95 via-[#13251c]/75 to-[#13251c]/20" />
         <div className="relative mx-auto flex min-h-[480px] max-w-6xl flex-col justify-end px-5 py-14 text-white">
           <Link to="/events" className="absolute top-8 inline-flex items-center gap-2 rounded-full bg-black/25 px-4 py-2 text-sm font-semibold backdrop-blur transition hover:bg-black/40">
@@ -56,6 +79,30 @@ export default function EventDetails() {
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">{event.summary}</p>
         </div>
       </section>
+
+      {event.slug === 'alumni-camp-jagannath-puri-2026' && (
+        <div className="mx-auto -mt-8 max-w-6xl px-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-[#e9dfcd] bg-white p-5 shadow-[0_20px_50px_rgba(75,55,24,0.08)] sm:p-7">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#b66d24]">Countdown</p>
+              <h2 className="mt-2 text-2xl font-black text-[#1f2a25]">Camp starts in</h2>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4" aria-label="Time left until the camp">
+              {[
+                { label: 'Days', value: timeLeft.days },
+                { label: 'Hours', value: String(timeLeft.hours).padStart(2, '0') },
+                { label: 'Min', value: String(timeLeft.minutes).padStart(2, '0') },
+                { label: 'Sec', value: String(timeLeft.seconds).padStart(2, '0') },
+              ].map((unit) => (
+                <div key={unit.label} className="rounded-2xl border border-[#f0e1bb] bg-[#fffaf2] px-4 py-3 text-center shadow-sm">
+                  <div className="text-2xl font-black text-[#1f2a25] sm:text-3xl">{unit.value}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b6338]">{unit.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_420px] lg:py-20">
         <article>
@@ -117,7 +164,7 @@ export default function EventDetails() {
               {showCampPosterInsteadOfForm ? (
                 <div className="mt-6 overflow-hidden rounded-2xl border border-[#e9dfcd] bg-[#fffcf7]">
                   <img
-                    src="/puriCamp.jpeg"
+                    src={cloudinaryAsset('/puriCamp.jpeg')}
                     alt="Jagannath Puri camp registration details"
                     className="h-full w-full object-cover"
                     loading="lazy"

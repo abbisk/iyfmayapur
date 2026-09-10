@@ -95,7 +95,27 @@ async function handleInitiate(request, response) {
     dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
     reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
     mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
-    transaction_purpose: "General Donation", pan_card: input.pan_card || "", passport_no: input.passport_no || "",
+    transaction_purpose: input.transaction_purpose || "General Donation", course_id: input.course_id || "", pan_card: input.pan_card || "", passport_no: input.passport_no || "",
+    address_1: input.address_1, address_2: input.address_2 || "", post_office: input.post_office || "",
+    pin_code: input.pin_code, district: input.district, city: input.city, state: input.state, country: input.country,
+  };
+  payments.set(referenceId, { ...payload, status: "pending", created_at: new Date().toISOString() });
+  const data = encryptPayload(payload);
+  sendJson(response, 200, { reference_id: referenceId, payment_url: `${GATEWAY_URL}?dept_code=${DEPARTMENT_CODE}&data=${encodeURIComponent(data)}` });
+}
+
+async function handleLmsInitiate(request, response) {
+  const input = await readJson(request);
+  const required = [...requiredFields, "course_id"];
+  const missing = required.filter((field) => !String(input[field] ?? "").trim());
+  const amount = Number(input.amount);
+  if (missing.length || !Number.isFinite(amount) || amount <= 0) return sendJson(response, 400, { error: "Please complete the course payment details.", fields: missing });
+  const referenceId = `IYF-LMS-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
+  const payload = {
+    dept_code: DEPARTMENT_CODE, name: `${input.first_name} ${input.last_name}`, email: input.email,
+    reference_id: referenceId, amount: amount.toFixed(2), mode: "1", type: "1", isRecurring: "0",
+    mobile: input.mobile, first_name: input.first_name, middle_name: input.middle_name || "", last_name: input.last_name,
+    transaction_purpose: `LMS Course Enrollment (course_id:${input.course_id})`, course_id: String(input.course_id), pan_card: "", passport_no: "",
     address_1: input.address_1, address_2: input.address_2 || "", post_office: input.post_office || "",
     pin_code: input.pin_code, district: input.district, city: input.city, state: input.state, country: input.country,
   };
@@ -112,7 +132,9 @@ function handleCallback(requestUrl, response) {
     const existing = payments.get(referenceId) || {};
     const succeeded = paymentSucceeded(result);
     payments.set(referenceId, { ...existing, ...result, status: succeeded ? "success" : "failed", completed_at: new Date().toISOString() });
-    response.writeHead(302, { Location: `${SITE_URL}/donation?reference_id=${encodeURIComponent(referenceId)}` });
+    const courseId = existing.course_id || result.course_id || result.transaction_purpose?.match(/course[_ ]id[:=]([\w-]+)/i)?.[1] || "";
+    const destination = courseId ? `${SITE_URL}/lms/course/${encodeURIComponent(courseId)}` : `${SITE_URL}/donation`;
+    response.writeHead(302, { Location: `${destination}?reference_id=${encodeURIComponent(referenceId)}` });
     response.end();
   } catch (error) {
     console.error("Payment callback error:", error.message);
@@ -125,12 +147,22 @@ const server = createServer(async (request, response) => {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   try {
     if (request.method === "POST" && requestUrl.pathname === "/api/payment/initiate") return await handleInitiate(request, response);
+    if (request.method === "POST" && requestUrl.pathname === "/api/lms/payment/initiate") return await handleLmsInitiate(request, response);
     if (request.method === "GET" && requestUrl.pathname === "/api/payment/callback") return handleCallback(requestUrl, response);
     const statusMatch = requestUrl.pathname.match(/^\/api\/payment\/status\/([^/]+)$/);
+    if (request.method === "GET" && requestUrl.pathname === "/api/payment/status" && requestUrl.searchParams.has("token")) {
+      return sendJson(response, 400, { error: "Token verification is only available through the deployed payment API." });
+    }
     if (request.method === "GET" && statusMatch) {
       const payment = payments.get(decodeURIComponent(statusMatch[1]));
       if (!payment) return sendJson(response, 404, { error: "Payment record not found." });
-      return sendJson(response, 200, { reference_id: payment.reference_id, amount: payment.amount, first_name: payment.first_name, transaction_purpose: payment.transaction_purpose, status: payment.status });
+      return sendJson(response, 200, { reference_id: payment.reference_id, amount: payment.amount, first_name: payment.first_name, transaction_purpose: payment.transaction_purpose, course_id: payment.course_id || "", status: payment.status });
+    }
+    const lmsStatusMatch = requestUrl.pathname.match(/^\/api\/lms\/payment\/status\/([^/]+)$/);
+    if (request.method === "GET" && lmsStatusMatch) {
+      const payment = payments.get(decodeURIComponent(lmsStatusMatch[1]));
+      if (!payment || !payment.course_id) return sendJson(response, 404, { error: "LMS payment record not found." });
+      return sendJson(response, 200, { reference_id: payment.reference_id, amount: payment.amount, transaction_purpose: payment.transaction_purpose, course_id: payment.course_id, status: payment.status });
     }
     const receiptMatch = requestUrl.pathname.match(/^\/api\/payment\/receipt\/([^/]+)$/);
     if (request.method === "GET" && receiptMatch) {

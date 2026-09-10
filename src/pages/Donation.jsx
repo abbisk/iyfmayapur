@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { FiCheckCircle, FiDownload, FiHeart, FiLock } from "react-icons/fi";
+import { cloudinaryAsset } from "../lib/cloudinary";
 
-const amountOptions = [501, 1100, 2100, 5001];
+const amountOptions = [501, 1100, 2100, 3001, 4001, 5001];
 const initialForm = {
   amount: "", first_name: "", middle_name: "", last_name: "", email: "", mobile: "",
   pan_card: "", address_1: "", address_2: "", pin_code: "", district: "", city: "",
@@ -134,7 +135,7 @@ export default function Donation() {
 
       <main className="donation-layout donation-shell">
         <aside className="donation-story">
-          <div className="donation-story__image"><img src="/donation/Chaitanya-Mahaprabhu.webp" alt="Chaitanya Mahaprabhu" /></div>
+          <div className="donation-story__image"><img src={cloudinaryAsset("/donation/Chaitanya-Mahaprabhu.webp", { width: 700, crop: "limit" })} alt="Chaitanya Mahaprabhu" loading="lazy" decoding="async" /></div>
           <FiHeart aria-hidden="true" />
           <h2>Your offering makes service possible.</h2>
           <p>Every donation is securely processed by the ISKCON Mayapur Treasury payment gateway.</p>

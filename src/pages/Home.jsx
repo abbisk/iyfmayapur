@@ -1,4 +1,5 @@
  import { createElement, useEffect, useState } from "react";
+import { motion } from 'framer-motion';
 import {
   FiArrowUpRight,
   FiBookOpen,
@@ -12,6 +13,8 @@ import {
 import Masonry from "react-masonry-css";
 import { Link } from "react-router-dom";
 import Prabhupada from "../assets/January_20.jpg";
+import AnimatedCard from '../components/AnimatedCard.jsx';
+import { cloudinaryAsset } from "../lib/cloudinary";
 
 const lifeImages = [
   "img0.jpg",
@@ -26,7 +29,7 @@ const lifeImages = [
   "img11.jpg",
   "img9.jpg",
   "img10.jpg",
-].map((img) => `/life/${img}`);
+].map((img) => cloudinaryAsset(`/life/${img}`, { width: 900, crop: "limit" }));
 
 const homepageGalleryPreview = lifeImages.slice(0, 3);
 
@@ -58,7 +61,7 @@ const carouselImages = [
   "/home/youth15.jpeg",
   "/home/youth16.jpeg",
   "/home/youth17.jpeg",
-];
+].map((image) => cloudinaryAsset(image, { width: 1600, crop: "limit" }));
 
 const pathways = [
   {
@@ -96,6 +99,10 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [quoteImage, setQuoteImage] = useState(dailyQuote.url);
+  const visibleCarouselImages = [
+    currentIndex,
+    (currentIndex + 1) % carouselImages.length,
+  ];
 
   useEffect(() => {
     if (isPaused) return undefined;
@@ -119,29 +126,39 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      <section
+      <motion.section
         className="home-hero"
         aria-label="Life at IYF Mayapur slideshow"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
         <div className="home-hero__images">
-          {carouselImages.map((src, index) => (
+          {visibleCarouselImages.map((imageIndex) => (
             <img
-              key={src}
-              src={src}
-              alt={`IYF Mayapur youth gathering ${index + 1}`}
+              key={carouselImages[imageIndex]}
+              src={carouselImages[imageIndex]}
+              alt={`IYF Mayapur youth gathering ${imageIndex + 1}`}
               className={`home-hero__image ${
-                index === currentIndex ? "is-active" : ""
+                imageIndex === currentIndex ? "is-active" : ""
               }`}
-              fetchPriority={index === 0 ? "high" : "auto"}
+              loading={imageIndex === currentIndex ? "eager" : "lazy"}
+              fetchPriority={imageIndex === currentIndex ? "high" : "low"}
+              decoding="async"
             />
           ))}
         </div>
 
         <div className="home-hero__shade" />
 
-        <div className="home-hero__content home-shell">
+        <motion.div
+          className="home-hero__content home-shell"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
+        >
           <p className="home-hero__eyebrow">ISKCON Youth Forum · Sridham Mayapur</p>
           <h1>Find your purpose.<br />Live with wisdom.</h1>
           <p className="home-hero__lead">
@@ -156,7 +173,7 @@ export default function Home() {
               Upcoming events
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         <button
           type="button"
@@ -188,16 +205,29 @@ export default function Home() {
             />
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <div className="home-highlights home-shell" aria-label="IYF highlights">
+      <motion.div
+        className="home-highlights home-shell"
+        aria-label="IYF highlights"
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.45 }}
+      >
         <div><strong>15+</strong><span>Transformative courses</span></div>
         <div><strong>500+</strong><span>Young lives inspired</span></div>
         <div><FiUsers aria-hidden="true" /><span>A welcoming community</span></div>
-      </div>
+      </motion.div>
 
       <div>
-        <section className="home-intro home-shell">
+        <motion.section
+          className="home-intro home-shell"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="home-intro__content">
             <button
               type="button"
@@ -234,19 +264,30 @@ export default function Home() {
           <div className="home-intro__visual">
             <div className="home-intro__sun" aria-hidden="true" />
             <div className="home-intro__frame">
-              <img src="/home.jpg" alt="Who we are at IYF Mayapur" />
+              <img src={cloudinaryAsset("/home.jpg", { width: 1200, crop: "limit" })} alt="Who we are at IYF Mayapur" loading="lazy" decoding="async" />
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="home-pathways home-shell">
+        <motion.section
+          className="home-pathways home-shell"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="home-pathways__heading">
             <p>There is a place for you here</p>
             <h2>Grow in every dimension of life.</h2>
           </div>
           <div className="home-pathways__grid">
-            {pathways.map(({ icon, eyebrow, title, description, link, label }) => (
-              <article className="home-pathway-card" key={title}>
+            {pathways.map(({ icon, eyebrow, title, description, link, label }, index) => (
+              <AnimatedCard
+                key={title}
+                element="article"
+                variantIndex={index}
+                className="home-pathway-card"
+              >
                 <div className="home-pathway-card__icon">
                   {createElement(icon, { "aria-hidden": true })}
                 </div>
@@ -254,12 +295,18 @@ export default function Home() {
                 <h3>{title}</h3>
                 <span>{description}</span>
                 <Link to={link}>{label} <FiArrowUpRight aria-hidden="true" /></Link>
-              </article>
+              </AnimatedCard>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="home-quote-wrap">
+        <motion.section
+          className="home-quote-wrap"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="home-quote home-shell">
             <div className="home-quote__heading">
               <span className="home-quote__mark" aria-hidden="true">“</span>
@@ -271,12 +318,20 @@ export default function Home() {
                 src={quoteImage}
                 alt={`Srila Prabhupada daily quote for ${dailyQuote.label}`}
                 onError={() => setQuoteImage(Prabhupada)}
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="home-gallery home-shell">
+        <motion.section
+          className="home-gallery home-shell"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="home-gallery__heading">
             <h2>Life at IYF Mayapur</h2>
             <span className="home-title-rule" />
@@ -293,6 +348,7 @@ export default function Home() {
                   src={src}
                   alt={`Life at IYF Mayapur ${index + 1}`}
                   loading="lazy"
+                  decoding="async"
                 />
               </figure>
             ))}
@@ -302,9 +358,15 @@ export default function Home() {
               Explore the gallery <FiArrowUpRight aria-hidden="true" />
             </Link>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="home-cta">
+        <motion.section
+          className="home-cta"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="home-cta__content home-shell">
             <p>Your journey can begin today.</p>
             <h2>Come as you are.<br />Grow into who you can be.</h2>
@@ -312,7 +374,7 @@ export default function Home() {
               Meet the community <FiArrowUpRight aria-hidden="true" />
             </Link>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

@@ -37,6 +37,8 @@ export function paymentSucceeded(payload) {
 }
 
 export function callbackClaims(payload) {
+  const purpose = payload.transaction_purpose || payload.Transaction_Purpose || "General Donation";
+  const courseMatch = purpose.match(/course[_ ]id[:=]([\w-]+)/i);
   return {
     reference_id: payload.reference_id || payload.sub_merchant_reference_no,
     transaction_id: payload.Unique_Ref_Number || payload.transaction_id || payload.payment_id || "",
@@ -44,7 +46,8 @@ export function callbackClaims(payload) {
     status: paymentSucceeded(payload) ? "success" : "failed",
     transaction_date: payload.Transaction_Date || new Date().toISOString(),
     payment_mode: payload.Payment_Mode || "",
-    purpose: "General Donation",
+    purpose,
+    course_id: payload.course_id || courseMatch?.[1] || "",
   };
 }
 
